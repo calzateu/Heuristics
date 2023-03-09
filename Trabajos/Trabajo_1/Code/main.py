@@ -1,5 +1,6 @@
 # Used libraries
 import numpy as np
+import matplotlib.pyplot as plt
 
 # My modules
 import constructive
@@ -78,6 +79,17 @@ class MainMethods():
         print("Total distance: ", total_distances_traveled)
         print("Num nodes visited", nodes_visited)
 
+    def plot_routes(self, routes):
+        plt.plot(self.nodes[0][1], self.nodes[0][2], "o")
+        plt.plot(self.nodes[1:,1], self.nodes[1:,2], "o")
+
+        for route in routes:
+            x = self.nodes[route, [1]*len(route)]
+            y = self.nodes[route, [2]*len(route)]
+            plt.plot(x, y)
+
+        plt.show()
+
     def run_method(self, Method):
         problem_information = self.problem_information
         demands = self.nodes[:, 3].copy()
@@ -86,10 +98,14 @@ class MainMethods():
 
         self.__validate_solutions(paths=paths, method=method)
 
+        self.plot_routes(paths)
+
+
+
 
 
 if __name__ == '__main__':
-    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt')
+    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt')
     exec.compute_distances()
 
     exec.run_method(Method=constructive.ConstructiveMethod)

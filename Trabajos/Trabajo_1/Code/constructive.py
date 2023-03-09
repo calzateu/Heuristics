@@ -30,7 +30,7 @@ class ConstructiveMethod():
         demands_copy = list(map(lambda x: x/max_demand, demands_copy))
         distances_copy = list(map(lambda x: x/max_distance, distances_copy))
 
-        constant = 0
+        constant = 0.5
         metrics = list(
                 map(lambda t: constant*t[0] + (1-constant)*t[1], zip(demands_copy, distances_copy))
         )
