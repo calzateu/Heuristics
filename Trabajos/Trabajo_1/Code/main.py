@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 # My modules
 import constructive
+import constructive2
 
 class MainMethods():
     def __init__(self, file_name) -> None:
@@ -108,6 +109,7 @@ if __name__ == '__main__':
     exec.compute_distances()
 
     exec.run_method(Method=constructive.ConstructiveMethod)
+    exec.run_method(Method=constructive2.ConstructiveMethod)
 
 
 
