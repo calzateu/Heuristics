@@ -94,16 +94,13 @@ class MainMethods():
         problem_information = self.problem_information
         demands = self.nodes[:, 3].copy()
 
-        alpha = 0.5
+        alpha = 0
         method = Method(problem_information, self.dist_matrix, demands, alpha)
         paths = method.search_paths()
 
         self.__validate_solutions(paths=paths, method=method)
 
         self.plot_routes(paths)
-
-
-
 
 
 if __name__ == '__main__':
