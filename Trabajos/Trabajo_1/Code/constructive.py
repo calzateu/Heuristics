@@ -79,16 +79,11 @@ class ConstructiveMethod():
                         self.visited_nodes[next_node] = True
                         missing_nodes -= 1
 
-                    #print(paths)
-                    #print(missing_nodes)
                     actual_node_vehicles[i] = next_node
                     capacities[i] = new_capacity
-
 
         for i in range(self.number_of_vehicles):
             if paths[i][-1] != 0:
                 paths[i].append(0)
 
-
         return paths
-
