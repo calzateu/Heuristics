@@ -52,6 +52,53 @@ class ConstructiveMethod():
 
         return next_node, new_capacity
 
+    # def __order_vehicles(self, traveled_distances):
+    #     ''''''
+    #     dicc = dict()
+    #     for index, num in enumerate(traveled_distances):
+    #         dicc[num] = index
+
+    #     print(traveled_distances)
+    #     traveled_distances = sorted(traveled_distances)
+
+    #     indices = [dicc[i] for i in traveled_distances]
+    #     print(indices)
+    #     return indices
+
+    def __order_vehicles(self, traveled_distances):
+        """
+            Given a list of numbers, sorts the list and returns the original indices of the sorted numbers.
+
+        Parameters:
+        numbers (list of int or float): The list of numbers to sort.
+
+        Returns:
+        indices (list of int): The indices of the sorted numbers.
+        sorted_numbers (list of int or float): The sorted list of numbers.
+        """
+        # Create a list of tuples, where each tuple contains the original index and the number at that index.
+        indexed_numbers = [(index, number) for index, number in enumerate(traveled_distances)]
+
+        # Sort the list of tuples by the number in each tuple.
+        sorted_indexed_numbers = sorted(indexed_numbers, key=lambda x: x[1])
+
+        # Create a list of the sorted numbers by extracting the number from each tuple.
+        sorted_numbers = [number for _, number in sorted_indexed_numbers]
+
+        # Create a list of the indices of the sorted numbers by extracting the index from each tuple.
+        indices = [index for index, _ in sorted_indexed_numbers]
+
+        # Handle ties by sorting the tied indices in ascending order.
+        for i in range(len(sorted_numbers)):
+            j = i + 1
+            while j < len(sorted_numbers) and sorted_numbers[j] == sorted_numbers[i]:
+                j += 1
+            if j - i > 1:
+                indices[i:j] = sorted(indices[i:j])
+
+        return indices
+
+
     def search_paths(self):
         paths = []
         for i in range(int(self.number_of_vehicles)):
@@ -60,27 +107,35 @@ class ConstructiveMethod():
         missing_nodes = self.number_of_nodes # Because the depot doesn't count
         actual_node_vehicles = [0]*self.number_of_vehicles
         capacities = [self.capacity_of_vehicles]*self.number_of_vehicles
+        traveled_distances = [0]*self.number_of_vehicles
 
         while missing_nodes > 0:
-            for i in range(self.number_of_vehicles):
-                distances = self.dist_matrix[actual_node_vehicles[i]]
+            for i in self.__order_vehicles(traveled_distances):     # Hacer un foreach ordenando el recorrido
+                                                # de los vehículos de menor a mayor
+                stop = False
+                while not stop:
+                    distances = self.dist_matrix[actual_node_vehicles[i]]
 
-                next_node, new_capacity = self.__select_next_node(
-                        demands=self.demands,
-                        distances=distances,
-                        capacity=capacities[i],
-                        actual_node_vehicle=actual_node_vehicles[i]
-                )
+                    next_node, new_capacity = self.__select_next_node(
+                            demands=self.demands,
+                            distances=distances,
+                            capacity=capacities[i],
+                            actual_node_vehicle=actual_node_vehicles[i]
+                    )
 
-                if not (paths[i][-1] == 0 and next_node == 0):
+                    #if not (paths[i][-1] == 0 and next_node == 0):
                     paths[i].append(next_node)
 
                     if next_node != 0:
                         self.visited_nodes[next_node] = True
                         missing_nodes -= 1
+                    else:
+                        stop = True
+                        #print("Parar")
 
                     actual_node_vehicles[i] = next_node
                     capacities[i] = new_capacity
+                    traveled_distances[i] += distances[next_node]
 
         for i in range(self.number_of_vehicles):
             if paths[i][-1] != 0:
