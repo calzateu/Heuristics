@@ -3,16 +3,17 @@ import numpy as np
 from collections import defaultdict
 
 class ConstructiveMethod():
-    def __init__(self, problem_information, dist_matrix, demands) -> None:
+    def __init__(self, problem_information, dist_matrix, demands, alpha) -> None:
         print("Constructive")
-
-        self.dist_matrix            = dist_matrix
-        self.demands                = demands
 
         self.number_of_nodes        = problem_information[0]
         self.number_of_vehicles     = int(problem_information[1])
         self.capacity_of_vehicles   = problem_information[2]
         self.max_distance           = problem_information[3]
+
+        self.dist_matrix            = dist_matrix
+        self.demands                = demands
+        self.alpha                  = alpha
 
         self.visited_nodes          = defaultdict(lambda: False)
 
@@ -22,7 +23,7 @@ class ConstructiveMethod():
 
         next_node  = 0
         new_capacity = 0
-        min_node   = np.inf
+        min_metric_node   = np.inf
 
         max_demand = max(demands_copy)
         max_distance = max(distances)
@@ -30,15 +31,14 @@ class ConstructiveMethod():
         demands_copy = list(map(lambda x: x/max_demand, demands_copy))
         distances_copy = list(map(lambda x: x/max_distance, distances_copy))
 
-        constant = 0.5
         metrics = list(
-                map(lambda t: constant*t[0] + (1-constant)*t[1], zip(demands_copy, distances_copy))
+                map(lambda t: self.alpha*t[0] + (1-self.alpha)*t[1], zip(demands_copy, distances_copy))
         )
 
         for i in range(len(demands_copy)):
             if not self.visited_nodes[i] and capacity >= demands[i]:
-                if i != actual_node_vehicle and metrics[i] < min_node:
-                    min_node = metrics[i]
+                if i != actual_node_vehicle and metrics[i] < min_metric_node:
+                    min_metric_node = metrics[i]
                     next_node = i
 
         if next_node != 0:
