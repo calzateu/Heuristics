@@ -26,10 +26,12 @@ class ConstructiveMethod():
         min_metric_node   = np.inf
 
         max_demand = max(demands_copy)
-        max_distance = max(distances)
+        min_deman = min(demands_copy)
+        max_distance = max(distances_copy)
+        min_distance = min(distances_copy)
 
-        demands_copy = list(map(lambda x: x/max_demand, demands_copy))
-        distances_copy = list(map(lambda x: x/max_distance, distances_copy))
+        demands_copy = list(map(lambda x: (x - min_deman)/(max_demand - min_deman), demands_copy))
+        distances_copy = list(map(lambda x: (x - min_distance)/(max_distance - min_distance), distances_copy))
 
         metrics = list(
                 map(lambda t: self.alpha*t[0] + (1-self.alpha)*t[1], zip(demands_copy, distances_copy))

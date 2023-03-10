@@ -94,7 +94,7 @@ class MainMethods():
         problem_information = self.problem_information
         demands = self.nodes[:, 3].copy()
 
-        alpha = 0
+        alpha = 0.5
         method = Method(problem_information, self.dist_matrix, demands, alpha)
         paths = method.search_paths()
 
