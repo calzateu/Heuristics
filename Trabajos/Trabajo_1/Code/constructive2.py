@@ -18,30 +18,30 @@ class ConstructiveMethod():
         self.visited_nodes          = defaultdict(lambda: False)
 
     def __select_next_node(self, demands, distances, capacity, actual_node_vehicle):
-        demands_copy = demands.copy()
-        distances_copy = distances.copy()
+        # demands_copy = demands.copy()
+        # distances_copy = distances.copy()
 
         next_node  = 0
         new_capacity = 0
         min_metric_node   = np.inf
 
-        max_demand = max(demands_copy)
-        min_deman = min(demands_copy)
-        max_distance = max(distances_copy)
-        min_distance = min(distances_copy)
+        # max_demand = max(demands_copy)
+        # min_deman = min(demands_copy)
+        # max_distance = max(distances_copy)
+        # min_distance = min(distances_copy)
 
-        demands_copy = list(map(lambda x: (x - min_deman)/(max_demand - min_deman), demands_copy))
-        distances_copy = list(map(lambda x: (x - min_distance)/(max_distance - min_distance), distances_copy))
+        # demands_copy = list(map(lambda x: (x - min_deman)/(max_demand - min_deman), demands_copy))
+        # distances_copy = list(map(lambda x: (x - min_distance)/(max_distance - min_distance), distances_copy))
 
         # metrics = list(
         #         map(lambda t: self.alpha*t[0] + (1-self.alpha)*t[1], zip(demands_copy, distances_copy))
         # )
 
-        metrics = [0]*len(distances_copy)
-        for i in range(len(distances_copy)):
+        metrics = [0]*len(distances)
+        for i in range(len(distances)):
             metrics[i] = distances[i] - (self.dist_matrix[i][0])*(capacity/self.capacity_of_vehicles)
 
-        for i in range(len(demands_copy)):
+        for i in range(len(demands)):
             if not self.visited_nodes[i] and capacity >= demands[i]:
                 if i != actual_node_vehicle and metrics[i] < min_metric_node:
                     min_metric_node = metrics[i]
