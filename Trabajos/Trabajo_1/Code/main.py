@@ -124,7 +124,7 @@ if __name__ == '__main__':
     demands = nodes[:, 3].copy()
     exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands, alpha))
 
-    max_iterations = 15000
+    max_iterations = 1000
     k = 5
     exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
 
