@@ -2,7 +2,7 @@ import numpy as np
 from collections import defaultdict
 import random
 
-class GRASP():
+class GRASP2():
     def __init__(self, problem_information, dist_matrix, demands, max_iterations, k) -> None:
         print("GRASP")
 
@@ -62,10 +62,6 @@ class GRASP():
             if not visited_nodes[i]:
                 candidates.append(i)
 
-        #if candidates == [0]:
-        #    exit()
-        #print(candidates)
-
         sorted_metrics = set(sorted(metrics)[:self.k])
 
         rcl = []
@@ -76,9 +72,6 @@ class GRASP():
 
         for i in range(self.k - len(rcl)):
             rcl.append(random.choice(candidates))
-
-
-
 
 
         next_node = random.choice(rcl)

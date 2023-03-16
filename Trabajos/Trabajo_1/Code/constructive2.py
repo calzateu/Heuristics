@@ -18,29 +18,14 @@ class ConstructiveMethod2():
         self.visited_nodes          = defaultdict(lambda: False)
 
     def __select_next_node(self, demands, distances, capacity, actual_node_vehicle):
-        # demands_copy = demands.copy()
-        # distances_copy = distances.copy()
-
         next_node  = 0
         new_capacity = 0
         min_metric_node   = np.inf
 
-        # max_demand = max(demands_copy)
-        # min_deman = min(demands_copy)
         max_distance = max(distances)
-        # min_distance = min(distances_copy)
-
-        # demands_copy = list(map(lambda x: (x - min_deman)/(max_demand - min_deman), demands_copy))
-        # distances_copy = list(map(lambda x: (x - min_distance)/(max_distance - min_distance), distances_copy))
-
-        # metrics = list(
-        #         map(lambda t: self.alpha*t[0] + (1-self.alpha)*t[1], zip(demands_copy, distances_copy))
-        # )
 
         metrics = [0]*len(distances)
         for i in range(len(distances)):
-            #metrics[i] = distances[i] - (self.dist_matrix[i][0])*(capacity/self.capacity_of_vehicles)
-            #metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
             metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
 
         for i in range(len(demands)):
@@ -58,43 +43,15 @@ class ConstructiveMethod2():
 
         return next_node, new_capacity
 
-    # def __order_vehicles(self, traveled_distances):
-    #     ''''''
-    #     dicc = dict()
-    #     for index, num in enumerate(traveled_distances):
-    #         dicc[num] = index
-
-    #     print(traveled_distances)
-    #     traveled_distances = sorted(traveled_distances)
-
-    #     indices = [dicc[i] for i in traveled_distances]
-    #     print(indices)
-    #     return indices
-
     def __order_vehicles(self, traveled_distances):
-        """
-            Given a list of numbers, sorts the list and returns the original indices of the sorted numbers.
-
-        Parameters:
-        numbers (list of int or float): The list of numbers to sort.
-
-        Returns:
-        indices (list of int): The indices of the sorted numbers.
-        sorted_numbers (list of int or float): The sorted list of numbers.
-        """
-        # Create a list of tuples, where each tuple contains the original index and the number at that index.
         indexed_numbers = [(index, number) for index, number in enumerate(traveled_distances)]
 
-        # Sort the list of tuples by the number in each tuple.
         sorted_indexed_numbers = sorted(indexed_numbers, key=lambda x: x[1])
 
-        # Create a list of the sorted numbers by extracting the number from each tuple.
         sorted_numbers = [number for _, number in sorted_indexed_numbers]
 
-        # Create a list of the indices of the sorted numbers by extracting the index from each tuple.
         indices = [index for index, _ in sorted_indexed_numbers]
 
-        # Handle ties by sorting the tied indices in ascending order.
         for i in range(len(sorted_numbers)):
             j = i + 1
             while j < len(sorted_numbers) and sorted_numbers[j] == sorted_numbers[i]:

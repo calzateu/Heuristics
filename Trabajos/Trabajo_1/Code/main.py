@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from constructive import ConstructiveMethod
 from constructive2 import ConstructiveMethod2
 from GRASP import GRASP
+from GRASP2 import GRASP2
 
 class MainMethods():
     def __init__(self, file_name) -> None:
@@ -126,7 +127,8 @@ if __name__ == '__main__':
 
     max_iterations = 1000
     k = 5
-    exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
+    #exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
+    exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
 
 
 
