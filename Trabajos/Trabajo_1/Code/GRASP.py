@@ -26,7 +26,6 @@ class GRASP():
 
         capacities = [self.capacity_of_vehicles]*self.number_of_vehicles
 
-        #vehicle = 0
         while missing_nodes:
             vehicle = random.randint(0, self.number_of_vehicles - 1)
 
