@@ -105,7 +105,7 @@ class MainMethods():
 
 
 if __name__ == '__main__':
-    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt')
+    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP2.txt')
     exec.compute_distances()
 
     exec.run_method(Method=constructive.ConstructiveMethod)

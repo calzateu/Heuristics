@@ -33,9 +33,13 @@ class ConstructiveMethod():
         demands_copy = list(map(lambda x: (x - min_deman)/(max_demand - min_deman), demands_copy))
         distances_copy = list(map(lambda x: (x - min_distance)/(max_distance - min_distance), distances_copy))
 
-        metrics = list(
-                map(lambda t: self.alpha*t[0] + (1-self.alpha)*t[1], zip(demands_copy, distances_copy))
-        )
+        # metrics = list(
+        #         map(lambda t: self.alpha*t[0] + (1-self.alpha)*t[1], zip(demands_copy, distances_copy))
+        # )
+
+        metrics = [0]*len(distances_copy)
+        for i in range(len(distances_copy)):
+            metrics[i] = distances[i] - (self.dist_matrix[i][0])*(capacity/self.capacity_of_vehicles)
 
         for i in range(len(demands_copy)):
             if not self.visited_nodes[i] and capacity >= demands[i]:
