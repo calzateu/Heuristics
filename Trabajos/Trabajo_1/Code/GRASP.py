@@ -3,10 +3,10 @@ from collections import defaultdict
 import random
 
 class GRASP():
-    def __init__(self, problem_information, dist_matrix, demands) -> None:
+    def __init__(self, problem_information, dist_matrix, demands, max_iterations, k) -> None:
         print("GRASP")
 
-        self.number_of_nodes        = problem_information[0]
+        self.number_of_nodes        = int(problem_information[0])
         self.number_of_vehicles     = int(problem_information[1])
         self.capacity_of_vehicles   = problem_information[2]
         self.max_distance           = problem_information[3]
@@ -16,33 +16,79 @@ class GRASP():
 
         self.visited_nodes          = defaultdict(lambda: False)
 
-    def build_initial_solution(self):
-        solution = [[] for _ in self.number_of_vehicles]
+        self.max_iterations = max_iterations
+        self.k = k
 
-        number_missing_nodes = self.number_of_nodes
+    def build_initial_solution(self):
+        solution = [[0] for _ in range(self.number_of_vehicles)]
+
         missing_nodes = set(range(self.number_of_nodes))
 
-        while missing_nodes > 0:
-            vehicle = random.randint(0, self.number_of_vehicles - 1)
+        capacities = [self.capacity_of_vehicles]*self.number_of_vehicles
 
-            sorted()
+        vehicle = 0
+        while missing_nodes:
+            #vehicle = random.randint(0, self.number_of_vehicles - 1)
+
+            distances = self.dist_matrix[solution[vehicle][-1]]
+            max_distance = max(distances)
+
+            metrics = [float('inf')]*len(distances)
+            # for i in missing_nodes:
+            #     metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacities[vehicle]/self.capacity_of_vehicles)*(1 - capacities[vehicle]/self.capacity_of_vehicles)
+
+            for i in missing_nodes:
+                metrics[i] = distances[i]
+
+            sorted_metrics = set(sorted(metrics)[:self.k])
+
+            rcl = []
+            for i in missing_nodes:
+                if metrics[i] in sorted_metrics:
+                    #print(i, metrics[i])
+                    rcl.append(i)
+
+            #print("rcl", rcl)
+            next_node = random.choice(rcl)
+            #print("next_node", next_node)
+            solution[vehicle].append(next_node)
+
+            missing_nodes.remove(next_node)
+
+        return solution
+
+    def __traveled_distance(self, path):
+        distance = 0
+        for i in range(len(path)-1):
+            distance += self.dist_matrix[path[i], path[i+1]]
+
+        return distance
 
     def compute_cost(self, solution):
-        ''''''
+        cost = 0
+        for path in solution:
+            distance = self.__traveled_distance(path)
+            if distance > self.max_distance:
+                cost += distance*10
+            else:
+                cost += distance
 
-    def grasp(self, max_iterations, k):
+        return cost
+
+    def search_paths(self):
         best_solution = None
         best_cost = float("inf")
 
-        for i in range(max_iterations):
+        for i in range(self.max_iterations):
             solution = self.build_initial_solution()
+            #print("Solution", solution)
             cost = self.compute_cost(solution)
 
             if cost < best_cost:
                 best_solution = solution
                 best_cost = cost
 
-        return best_solution, best_cost
+        return best_solution#, best_cost
 
 
 

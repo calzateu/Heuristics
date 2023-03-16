@@ -2,7 +2,7 @@
 import numpy as np
 from collections import defaultdict
 
-class ConstructiveMethod():
+class ConstructiveMethod2():
     def __init__(self, problem_information, dist_matrix, demands, alpha) -> None:
         print("Constructive")
 
@@ -27,7 +27,7 @@ class ConstructiveMethod():
 
         # max_demand = max(demands_copy)
         # min_deman = min(demands_copy)
-        # max_distance = max(distances_copy)
+        max_distance = max(distances)
         # min_distance = min(distances_copy)
 
         # demands_copy = list(map(lambda x: (x - min_deman)/(max_demand - min_deman), demands_copy))
@@ -39,7 +39,9 @@ class ConstructiveMethod():
 
         metrics = [0]*len(distances)
         for i in range(len(distances)):
-            metrics[i] = distances[i] - (self.dist_matrix[i][0])*(capacity/self.capacity_of_vehicles)
+            #metrics[i] = distances[i] - (self.dist_matrix[i][0])*(capacity/self.capacity_of_vehicles)
+            #metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
+            metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
 
         for i in range(len(demands)):
             if not self.visited_nodes[i] and capacity >= demands[i]:

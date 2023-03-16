@@ -3,15 +3,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # My modules
-import constructive
-import constructive2
+from constructive import ConstructiveMethod
+from constructive2 import ConstructiveMethod2
+from GRASP import GRASP
 
 class MainMethods():
     def __init__(self, file_name) -> None:
         self.__MAX_NUM_NODOS  = 201
         self.__FILE_NAME      = file_name
 
-        self.read_data()
+        self.problem_information = []
 
     def read_data(self):
         nodes       = np.zeros((self.__MAX_NUM_NODOS , 4))
@@ -26,6 +27,8 @@ class MainMethods():
         self.problem_information = nodes[0]
         self.nodes  = nodes[1:cont]
         self.cont   = cont - 1
+
+        return self.problem_information, self.nodes, self.cont
 
     def compute_distances(self):
         n = len(self.nodes)
@@ -43,6 +46,8 @@ class MainMethods():
                 dist_matrix[j, i] = dist
 
         self.dist_matrix = dist_matrix
+
+        return dist_matrix
 
     def __traveled_distance(self, path):
         distance = 0
@@ -76,27 +81,29 @@ class MainMethods():
                         print("Max distance exceed", distance)
                         print(i)
 
-        #print(paths)
+        print(paths)
         print("Total distance: ", total_distances_traveled)
         print("Num nodes visited", nodes_visited)
 
     def plot_routes(self, routes):
         plt.plot(self.nodes[0][1], self.nodes[0][2], "o")
-        plt.plot(self.nodes[1:,1], self.nodes[1:,2], "o")
+        x = self.nodes[1:,1]
+        y = self.nodes[1:,2]
+        plt.plot(x, y, "o")
 
-        for route in routes:
-            x = self.nodes[route, [1]*len(route)]
-            y = self.nodes[route, [2]*len(route)]
-            plt.plot(x, y)
+        for i in range(len(x)):
+            plt.text(x[i], y[i]+0.5, '{}'.format(i+1))
+
+        for i in range(len(routes)):
+            x = self.nodes[routes[i], [1]*len(routes[i])]
+            y = self.nodes[routes[i], [2]*len(routes[i])]
+            plt.plot(x, y, label="Vehicle: " + str(i+1))
+
+        plt.legend()
 
         plt.show()
 
-    def run_method(self, Method):
-        problem_information = self.problem_information
-        demands = self.nodes[:, 3].copy()
-
-        alpha = 0
-        method = Method(problem_information, self.dist_matrix, demands, alpha)
+    def run_method(self, method):
         paths = method.search_paths()
 
         self.__validate_solutions(paths=paths, method=method)
@@ -105,11 +112,21 @@ class MainMethods():
 
 
 if __name__ == '__main__':
-    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP2.txt')
-    exec.compute_distances()
+    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt')
+    problem_information, nodes, cont = exec.read_data()
+    dist_matrix = exec.compute_distances()
+    demands = nodes[:, 3].copy()
 
-    exec.run_method(Method=constructive.ConstructiveMethod)
-    exec.run_method(Method=constructive2.ConstructiveMethod)
+    alpha = 0
+
+    #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands, alpha))
+
+    demands = nodes[:, 3].copy()
+    exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands, alpha))
+
+    max_iterations = 15000
+    k = 5
+    exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
 
 
 
