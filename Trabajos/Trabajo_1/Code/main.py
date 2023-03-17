@@ -127,6 +127,7 @@ if __name__ == '__main__':
 
     max_iterations = 1000
     k = 5
+    demands = nodes[:, 3].copy()
     #exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
     exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
 

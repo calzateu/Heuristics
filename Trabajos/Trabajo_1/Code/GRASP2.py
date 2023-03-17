@@ -41,7 +41,6 @@ class GRASP2():
     def __select_next_node(self, demands, distances, capacity, actual_node_vehicle, visited_nodes):
         next_node  = 0
         new_capacity = 0
-        min_metric_node   = np.inf
 
         max_distance = max(distances)
 
@@ -51,16 +50,20 @@ class GRASP2():
         # for i in range(len(distances)):
         #     metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
 
-        for i in range(len(demands)):
-            if not self.visited_nodes[i] and capacity >= demands[i]:
-                if i != actual_node_vehicle and metrics[i] < min_metric_node:
-                    min_metric_node = metrics[i]
-                    next_node = i
+        # for i in range(len(demands)):
+        #     if not self.visited_nodes[i] and capacity >= demands[i]:
+        #         if i != actual_node_vehicle and metrics[i] < min_metric_node:
+        #             min_metric_node = metrics[i]
+        #             next_node = i
 
         candidates = []
-        for i in range(len(self.demands)):
-            if not visited_nodes[i]:
-                candidates.append(i)
+        for i in range(len(demands)):
+            if not visited_nodes[i] and capacity >= demands[i]:
+                if i != actual_node_vehicle:
+                    candidates.append(i)
+
+        #print("Capacity", capacity)
+        #print("Candidates", candidates)
 
         sorted_metrics = set(sorted(metrics)[:self.k])
 
@@ -70,11 +73,12 @@ class GRASP2():
                 if metrics[i] in sorted_metrics:
                     rcl.append(i)
 
-        for i in range(self.k - len(rcl)):
-            rcl.append(random.choice(candidates))
+        if len(candidates) > 0:
+            for i in range(self.k - len(rcl)):
+                rcl.append(random.choice(candidates))
 
-
-        next_node = random.choice(rcl)
+        if len(rcl) > 0:
+            next_node = random.choice(rcl)
 
         if next_node != 0:
             new_capacity = capacity - demands[next_node]
@@ -85,7 +89,7 @@ class GRASP2():
 
         return next_node, new_capacity
 
-    def build_initial_solution(self):
+    def build_initial_solution(self, demands):
         paths = []
         for i in range(int(self.number_of_vehicles)):
             paths.append([0])
@@ -105,7 +109,7 @@ class GRASP2():
                     distances = self.dist_matrix[actual_node_vehicles[i]]
 
                     next_node, new_capacity = self.__select_next_node(
-                            demands=self.demands,
+                            demands=demands,
                             distances=distances,
                             capacity=capacities[i],
                             actual_node_vehicle=actual_node_vehicles[i],
@@ -123,6 +127,10 @@ class GRASP2():
                     actual_node_vehicles[i] = next_node
                     capacities[i] = new_capacity
                     traveled_distances[i] += distances[next_node]
+
+            #print("Missing nodes", missing_nodes)
+            #print(visited_nodes)
+
 
         for i in range(self.number_of_vehicles):
             if paths[i][-1] != 0:
@@ -153,7 +161,7 @@ class GRASP2():
         best_cost = float("inf")
 
         for i in range(self.max_iterations):
-            solution = self.build_initial_solution()
+            solution = self.build_initial_solution(self.demands.copy())
             cost = self.compute_cost(solution)
 
             if cost < best_cost:
