@@ -123,13 +123,16 @@ if __name__ == '__main__':
     #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands, alpha))
 
     demands = nodes[:, 3].copy()
-    exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands, alpha))
+    #exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands, alpha))
 
-    max_iterations = 1000
-    k = 5
+    max_iterations = 20000
+    k = 2
+
     demands = nodes[:, 3].copy()
-    #exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
-    exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
+    exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
+
+    demands = nodes[:, 3].copy()
+    #exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
 
 
 

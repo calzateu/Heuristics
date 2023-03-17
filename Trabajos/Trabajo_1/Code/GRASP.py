@@ -54,21 +54,54 @@ class GRASP():
 
             missing_nodes.remove(next_node)
 
+        for i in range(self.number_of_vehicles):
+            if solution[i][-1] != 0:
+                solution[i].append(0)
+
         return solution
 
-    def __traveled_distance(self, path):
+    def __traveled_distance_and_capacity(self, path):
         distance = 0
+        ocupation = 0
+        res_ocupation = 1
         for i in range(len(path)-1):
             distance += self.dist_matrix[path[i], path[i+1]]
 
-        return distance
+            if i == 0:
+                if ocupation > self.capacity_of_vehicles:
+                    res_ocupation = 0
+                ocupation = 0
+            else:
+                ocupation += self.demands[i]
+
+        if path[-1] == 0:
+            if ocupation > self.capacity_of_vehicles:
+                res_ocupation = 0
+            ocupation = 0
+        else:
+            ocupation += self.demands[i]
+
+
+        return distance, res_ocupation
+
+    def __capacity(self, path):
+        ocupation = 0
+        for j in path:
+            if j == 0:
+                if ocupation > self.capacity_of_vehicles:
+                    return 0
+                ocupation = 0
+            else:
+                ocupation += self.demands[j]
+
+        return 1
 
     def compute_cost(self, solution):
         cost = 0
         for path in solution:
-            distance = self.__traveled_distance(path)
+            distance, res_ocupation = self.__traveled_distance_and_capacity(path)
             if distance > self.max_distance:
-                cost += distance*10
+                cost += distance*3+ res_ocupation*distance*10
             else:
                 cost += distance
 
@@ -86,6 +119,9 @@ class GRASP():
             if cost < best_cost:
                 best_solution = solution
                 best_cost = cost
+
+            if i%100 == 0:
+                print(i)
 
         return best_solution#, best_cost
 
