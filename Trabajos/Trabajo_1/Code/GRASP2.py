@@ -44,21 +44,21 @@ class GRASP2():
 
         max_distance = max(distances)
 
-
-        metrics = [0]*len(distances)
-
-        # for i in range(len(distances)):
-        #     metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
-
-        for i in range(len(distances)):
-            metrics[i] = distances[i]
-
+        metrics = [float('inf')]*len(distances)
 
         candidates = []
         for i in range(len(demands)):
             if not visited_nodes[i] and capacity >= demands[i]:
                 if i != actual_node_vehicle:
                     candidates.append(i)
+
+
+        for i in candidates:
+            metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
+
+        # for i in candidates:
+        #     metrics[i] = distances[i]
+
 
         #print("Capacity", capacity)
         #print("Candidates", candidates)
@@ -71,9 +71,12 @@ class GRASP2():
                 if metrics[i] in sorted_metrics:
                     rcl.append(i)
 
-        if len(candidates) > 0:
-            for i in range(self.k - len(rcl)):
-                rcl.append(random.choice(candidates))
+        candidates_copy = candidates.copy()
+        if len(candidates_copy) > 0:
+            for i in range(self.k - len(rcl) - 1):
+                choise = random.choice(candidates_copy)
+                candidates_copy.remove(choise)
+                rcl.append(choise)
 
         if len(rcl) > 0:
             next_node = random.choice(rcl)
