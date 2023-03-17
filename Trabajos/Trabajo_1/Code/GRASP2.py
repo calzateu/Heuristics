@@ -52,16 +52,11 @@ class GRASP2():
                 if i != actual_node_vehicle:
                     candidates.append(i)
 
-
         for i in candidates:
-            metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
+            metrics[i] = distances[i]
 
         # for i in candidates:
-        #     metrics[i] = distances[i]
-
-
-        #print("Capacity", capacity)
-        #print("Candidates", candidates)
+        #     metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
 
         sorted_metrics = set(sorted(metrics)[:self.k])
 
@@ -131,9 +126,6 @@ class GRASP2():
                     capacities[i] = new_capacity
                     traveled_distances[i] += distances[next_node]
 
-            #print("Missing nodes", missing_nodes)
-            #print(visited_nodes)
-
 
         for i in range(self.number_of_vehicles):
             if paths[i][-1] != 0:
@@ -174,7 +166,7 @@ class GRASP2():
             if i%100 == 0:
                 print(i)
 
-        return best_solution#, best_cost
+        return best_solution
 
 
 
