@@ -118,10 +118,9 @@ if __name__ == '__main__':
     dist_matrix = exec.compute_distances()
     demands = nodes[:, 3].copy()
 
+    #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands))
+
     alpha = 0
-
-    #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands, alpha))
-
     demands = nodes[:, 3].copy()
     #exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands, alpha))
 

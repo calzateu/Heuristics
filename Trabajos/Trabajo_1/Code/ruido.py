@@ -2,8 +2,8 @@
 import numpy as np
 from collections import defaultdict
 
-class ConstructiveMethod2():
-    def __init__(self, problem_information, dist_matrix, demands) -> None:
+class Noise():
+    def __init__(self, problem_information, dist_matrix, demands, alpha) -> None:
         print("Constructive")
 
         self.number_of_nodes        = problem_information[0]
@@ -13,6 +13,7 @@ class ConstructiveMethod2():
 
         self.dist_matrix            = dist_matrix
         self.demands                = demands
+        self.alpha                  = alpha
 
         self.visited_nodes          = defaultdict(lambda: False)
 
