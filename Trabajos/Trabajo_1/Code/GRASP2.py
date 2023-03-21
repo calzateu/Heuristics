@@ -21,11 +21,8 @@ class GRASP2():
 
     def __order_vehicles(self, traveled_distances):
         indexed_numbers = [(index, number) for index, number in enumerate(traveled_distances)]
-
         sorted_indexed_numbers = sorted(indexed_numbers, key=lambda x: x[1])
-
         sorted_numbers = [number for _, number in sorted_indexed_numbers]
-
         indices = [index for index, _ in sorted_indexed_numbers]
 
         for i in range(len(sorted_numbers)):

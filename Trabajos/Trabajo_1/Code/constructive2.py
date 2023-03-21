@@ -44,11 +44,8 @@ class ConstructiveMethod2():
 
     def __order_vehicles(self, traveled_distances):
         indexed_numbers = [(index, number) for index, number in enumerate(traveled_distances)]
-
         sorted_indexed_numbers = sorted(indexed_numbers, key=lambda x: x[1])
-
         sorted_numbers = [number for _, number in sorted_indexed_numbers]
-
         indices = [index for index, _ in sorted_indexed_numbers]
 
         for i in range(len(sorted_numbers)):
@@ -85,7 +82,6 @@ class ConstructiveMethod2():
                             actual_node_vehicle=actual_node_vehicles[i]
                     )
 
-                    #if not (paths[i][-1] == 0 and next_node == 0):
                     paths[i].append(next_node)
 
                     if next_node != 0:
@@ -93,7 +89,6 @@ class ConstructiveMethod2():
                         missing_nodes -= 1
                     else:
                         stop = True
-                        #print("Parar")
 
                     actual_node_vehicles[i] = next_node
                     capacities[i] = new_capacity

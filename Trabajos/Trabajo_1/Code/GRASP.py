@@ -44,12 +44,9 @@ class GRASP():
             rcl = []
             for i in missing_nodes:
                 if metrics[i] in sorted_metrics:
-                    #print(i, metrics[i])
                     rcl.append(i)
 
-            #print("rcl", rcl)
             next_node = random.choice(rcl)
-            #print("next_node", next_node)
             solution[vehicle].append(next_node)
 
             missing_nodes.remove(next_node)
@@ -84,18 +81,6 @@ class GRASP():
 
         return distance, res_ocupation
 
-    def __capacity(self, path):
-        ocupation = 0
-        for j in path:
-            if j == 0:
-                if ocupation > self.capacity_of_vehicles:
-                    return 0
-                ocupation = 0
-            else:
-                ocupation += self.demands[j]
-
-        return 1
-
     def compute_cost(self, solution):
         cost = 0
         for path in solution:
@@ -113,7 +98,6 @@ class GRASP():
 
         for i in range(self.max_iterations):
             solution = self.build_initial_solution()
-            #print("Solution", solution)
             cost = self.compute_cost(solution)
 
             if cost < best_cost:
