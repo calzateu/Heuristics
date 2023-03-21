@@ -1,9 +1,10 @@
 
 import numpy as np
 from collections import defaultdict
+import random
 
-class ConstructiveMethod2():
-    def __init__(self, problem_information, dist_matrix, demands, alpha) -> None:
+class Noise():
+    def __init__(self, problem_information, dist_matrix, demands, std) -> None:
         print("Constructive")
 
         self.number_of_nodes        = problem_information[0]
@@ -13,7 +14,7 @@ class ConstructiveMethod2():
 
         self.dist_matrix            = dist_matrix
         self.demands                = demands
-        self.alpha                  = alpha
+        self.std                    = std
 
         self.visited_nodes          = defaultdict(lambda: False)
 
@@ -23,10 +24,12 @@ class ConstructiveMethod2():
         min_metric_node   = np.inf
 
         max_distance = max(distances)
+        min_distance = sorted(distances)[1] # Min distance except the 0
+        print("Min distance", min_distance)
 
         metrics = [0]*len(distances)
         for i in range(len(distances)):
-            metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles)
+            metrics[i] = distances[i]/max_distance - (self.dist_matrix[i][0]/max_distance)*(capacity/self.capacity_of_vehicles)*(1 - capacity/self.capacity_of_vehicles) + random.uniform(-self.std, self.std)
 
         for i in range(len(demands)):
             if not self.visited_nodes[i] and capacity >= demands[i]:

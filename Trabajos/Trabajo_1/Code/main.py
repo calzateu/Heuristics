@@ -7,6 +7,7 @@ from constructive import ConstructiveMethod
 from constructive2 import ConstructiveMethod2
 from GRASP import GRASP
 from GRASP2 import GRASP2
+from noise import Noise
 
 class MainMethods():
     def __init__(self, file_name) -> None:
@@ -118,11 +119,11 @@ if __name__ == '__main__':
     dist_matrix = exec.compute_distances()
     demands = nodes[:, 3].copy()
 
-    #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands))
+    #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands, alpha))
 
     alpha = 0
     demands = nodes[:, 3].copy()
-    #exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands, alpha))
+    exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands))
 
     max_iterations = 100000
     k = 2
@@ -131,7 +132,10 @@ if __name__ == '__main__':
     #exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
 
     demands = nodes[:, 3].copy()
-    exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
+    #exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
 
+    std = 0.2
+    demands = nodes[:, 3].copy()
+    #exec.run_method(method=Noise(problem_information, dist_matrix, demands, std))
 
 
