@@ -82,7 +82,8 @@ class ConstructiveMethod2():
                             actual_node_vehicle=actual_node_vehicles[i]
                     )
 
-                    paths[i].append(next_node)
+                    if not(next_node == 0 and len(paths[i]) > 0 and paths[i][-1] == 0):
+                        paths[i].append(next_node)
 
                     if next_node != 0:
                         self.visited_nodes[next_node] = True

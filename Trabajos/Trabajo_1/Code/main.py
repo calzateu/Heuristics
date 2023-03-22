@@ -1,6 +1,10 @@
 # Used libraries
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
+
+import openpyxl
 
 # My modules
 from constructive import ConstructiveMethod
@@ -10,17 +14,14 @@ from GRASP2 import GRASP2
 from noise import Noise
 
 class MainMethods():
-    def __init__(self, file_name) -> None:
+    def __init__(self) -> None:
         self.__MAX_NUM_NODOS  = 201
-        self.__FILE_NAME      = file_name
 
-        self.problem_information = []
-
-    def read_data(self):
+    def read_data(self, file_name):
         nodes       = np.zeros((self.__MAX_NUM_NODOS , 4))
 
         cont = 0
-        with open(self.__FILE_NAME, 'r') as file:
+        with open(file_name, 'r') as file:
             for line in file:
                 line         = list(map(int, line.split()))
                 nodes[cont]  = line
@@ -67,8 +68,8 @@ class MainMethods():
             for j in i:
                 if j == 0:
                     if ocupation > method.capacity_of_vehicles:
-                        print("Max capacity exceed", ocupation)
-                        print(i)
+                        #print("Max capacity exceed", ocupation)
+                        #print(i)
                         break
                     ocupation = 0
                 else:
@@ -79,13 +80,20 @@ class MainMethods():
             total_distances_traveled += distance
             nodes_visited += len(i)
 
-            if distance > method.max_distance:
-                        print("Max distance exceed", distance)
-                        print(i)
+            i.append(distance)
 
-        print(paths)
-        print("Total distance: ", total_distances_traveled)
-        print("Num nodes visited", nodes_visited)
+            # if distance > method.max_distance:
+            #             print("Max distance exceed", distance)
+            #             print(i)
+
+            if distance > method.max_distance:
+                i.append(1)
+            else:
+                i.append(0)
+
+        # print(paths)
+        # print("Total distance: ", total_distances_traveled)
+        # print("Num nodes visited", nodes_visited)
 
     def plot_routes(self, routes):
         plt.plot(self.nodes[0][1], self.nodes[0][2], "o")
@@ -105,37 +113,79 @@ class MainMethods():
 
         plt.show()
 
-    def run_method(self, method):
+    def save_solution(self, instances, name):
+        # Create a new Excel workbook
+        workbook = openpyxl.Workbook()
+
+        # Loop through each instance and create a new worksheet for it
+        for instance in instances:
+            # Select the active worksheet
+            worksheet = workbook.create_sheet(instance['name'])
+
+            # Write the list of lists of nodes to the worksheet row by row
+            for row in instance['nodes']:
+                worksheet.append(row)
+
+        # Save the workbook
+        workbook.save(name)
+
+
+    def run_method(self, method, verbose):
         paths = method.search_paths()
+
+        if verbose:
+            print(paths)
+            self.plot_routes(paths)
 
         self.__validate_solutions(paths=paths, method=method)
 
-        self.plot_routes(paths)
+        return paths
+
+    def run_instances(self, Method, name, verbose):
+        folder_path = "/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances"
+        files = os.listdir(folder_path)
+
+        instances = []
+        for file in files:
+            print(file)
+
+            problem_information, nodes, cont = self.read_data(folder_path + "/" + file)
+            dist_matrix = self.compute_distances()
+            demands = nodes[:, 3].copy()
+
+            method_instance = Method(problem_information, dist_matrix, demands)
+            instances.append(
+                {'name': file,
+                 'nodes': self.run_method(method=method_instance, verbose=verbose)
+                }
+            )
+
+        self.save_solution(instances=instances, name=name)
 
 
 if __name__ == '__main__':
-    exec = MainMethods('/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt')
-    problem_information, nodes, cont = exec.read_data()
+    file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt'
+    exec = MainMethods()
+    problem_information, nodes, cont = exec.read_data(file_name=file)
     dist_matrix = exec.compute_distances()
-    demands = nodes[:, 3].copy()
 
-    #exec.run_method(method=ConstructiveMethod(problem_information, dist_matrix, demands, alpha))
+    # demands = nodes[:, 3].copy()
+    # exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands), verbose=False)
 
-    alpha = 0
-    demands = nodes[:, 3].copy()
-    exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands))
-
-    max_iterations = 100000
-    k = 2
-
-    demands = nodes[:, 3].copy()
+    #max_iterations = 100000
+    #k = 2
+    #demands = nodes[:, 3].copy()
     #exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
 
-    demands = nodes[:, 3].copy()
+    #max_iterations = 100000
+    #k = 2
+    #demands = nodes[:, 3].copy()
     #exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
 
-    std = 0.2
-    demands = nodes[:, 3].copy()
+    #std = 0.2
+    #demands = nodes[:, 3].copy()
     #exec.run_method(method=Noise(problem_information, dist_matrix, demands, std))
 
+    demands = nodes[:, 3].copy()
+    exec.run_instances(Method=ConstructiveMethod2, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False)
 
