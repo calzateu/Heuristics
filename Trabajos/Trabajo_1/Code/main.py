@@ -59,7 +59,7 @@ class MainMethods():
 
         return distance
 
-    def __validate_solutions(self, paths, method):
+    def __validate_solutions(self, paths, method, print_validation):
         total_distances_traveled = 0
         nodes_visited = 0
 
@@ -68,8 +68,9 @@ class MainMethods():
             for j in i:
                 if j == 0:
                     if ocupation > method.capacity_of_vehicles:
-                        #print("Max capacity exceed", ocupation)
-                        #print(i)
+                        if print_validation:
+                            print("Max capacity exceed", ocupation)
+                            print(i)
                         break
                     ocupation = 0
                 else:
@@ -82,18 +83,19 @@ class MainMethods():
 
             i.append(distance)
 
-            # if distance > method.max_distance:
-            #             print("Max distance exceed", distance)
-            #             print(i)
+            if print_validation and distance > method.max_distance:
+                        print("Max distance exceed", distance)
+                        print(i)
 
             if distance > method.max_distance:
                 i.append(1)
             else:
                 i.append(0)
 
-        # print(paths)
-        # print("Total distance: ", total_distances_traveled)
-        # print("Num nodes visited", nodes_visited)
+        if print_validation:
+            print(paths)
+            print("Total distance: ", total_distances_traveled)
+            print("Num nodes visited", nodes_visited)
 
     def plot_routes(self, routes):
         plt.plot(self.nodes[0][1], self.nodes[0][2], "o")
@@ -130,18 +132,17 @@ class MainMethods():
         workbook.save(name)
 
 
-    def run_method(self, method, verbose):
+    def run_method(self, method, verbose, print_validation):
         paths = method.search_paths()
 
         if verbose:
-            print(paths)
             self.plot_routes(paths)
 
-        self.__validate_solutions(paths=paths, method=method)
+        self.__validate_solutions(paths=paths, method=method, print_validation=print_validation)
 
         return paths
 
-    def run_instances(self, Method, name, verbose):
+    def run_instances(self, Method, name, verbose, print_validation):
         folder_path = "/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances"
         files = os.listdir(folder_path)
 
@@ -156,7 +157,7 @@ class MainMethods():
             method_instance = Method(problem_information, dist_matrix, demands)
             instances.append(
                 {'name': file,
-                 'nodes': self.run_method(method=method_instance, verbose=verbose)
+                 'nodes': self.run_method(method=method_instance, verbose=verbose, print_validation=print_validation)
                 }
             )
 
@@ -164,28 +165,34 @@ class MainMethods():
 
 
 if __name__ == '__main__':
-    file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt'
-    exec = MainMethods()
-    problem_information, nodes, cont = exec.read_data(file_name=file)
-    dist_matrix = exec.compute_distances()
 
-    # demands = nodes[:, 3].copy()
-    # exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands), verbose=False)
+    run_individual_instance = False
 
-    #max_iterations = 100000
-    #k = 2
-    #demands = nodes[:, 3].copy()
-    #exec.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations, k))
+    if run_individual_instance:
+        file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt'
+        exec = MainMethods()
+        problem_information, nodes, cont = exec.read_data(file_name=file)
+        dist_matrix = exec.compute_distances()
 
-    #max_iterations = 100000
-    #k = 2
-    #demands = nodes[:, 3].copy()
-    #exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k))
+        demands = nodes[:, 3].copy()
+        exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands), verbose=False)
 
-    #std = 0.2
-    #demands = nodes[:, 3].copy()
-    #exec.run_method(method=Noise(problem_information, dist_matrix, demands, std))
+        max_iterations = 10000
+        k = 2
+        demands = nodes[:, 3].copy()
+        exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k), verbose=True, print_validation=True)
 
-    demands = nodes[:, 3].copy()
-    exec.run_instances(Method=ConstructiveMethod2, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False)
+        std = 0.2
+        demands = nodes[:, 3].copy()
+        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std))
+
+
+    run_all_instances = True
+
+    if run_all_instances:
+        demands = nodes[:, 3].copy()
+        exec.run_instances(Method=ConstructiveMethod2, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False)
+
+        demands = nodes[:, 3].copy()
+        exec.run_instances(Method=GRASP, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False)
 

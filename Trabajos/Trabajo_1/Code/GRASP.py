@@ -86,7 +86,7 @@ class GRASP():
         for path in solution:
             distance, res_ocupation = self.__traveled_distance_and_capacity(path)
             if distance > self.max_distance:
-                cost += distance*3+ res_ocupation*distance*10
+                cost += distance*3+ res_ocupation*distance*10000
             else:
                 cost += distance
 
@@ -103,9 +103,6 @@ class GRASP():
             if cost < best_cost:
                 best_solution = solution
                 best_cost = cost
-
-            if i%100 == 0:
-                print(i)
 
         return best_solution#, best_cost
 

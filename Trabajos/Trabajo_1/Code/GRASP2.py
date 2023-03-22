@@ -160,9 +160,6 @@ class GRASP2():
                 best_solution = solution
                 best_cost = cost
 
-            if i%100 == 0:
-                print(i)
-
         return best_solution
 
 
