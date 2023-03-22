@@ -1,8 +1,9 @@
 # Used libraries
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 import os
+import time
+
 
 import openpyxl
 
@@ -81,11 +82,11 @@ class MainMethods():
             total_distances_traveled += distance
             nodes_visited += len(i)
 
-            i.append(distance)
-
             if print_validation and distance > method.max_distance:
                         print("Max distance exceed", distance)
                         print(i)
+
+            i.append(distance)
 
             if distance > method.max_distance:
                 i.append(1)
@@ -96,6 +97,8 @@ class MainMethods():
             print(paths)
             print("Total distance: ", total_distances_traveled)
             print("Num nodes visited", nodes_visited)
+
+        return total_distances_traveled
 
     def plot_routes(self, routes):
         plt.plot(self.nodes[0][1], self.nodes[0][2], "o")
@@ -133,17 +136,23 @@ class MainMethods():
 
 
     def run_method(self, method, verbose, print_validation):
+        start = time.time()
         paths = method.search_paths()
+        end = time.time()
+        total_time = end - start
 
         if verbose:
             self.plot_routes(paths)
 
-        self.__validate_solutions(paths=paths, method=method, print_validation=print_validation)
+        total_distances_traveled = self.__validate_solutions(paths=paths, method=method, print_validation=print_validation)
+
+        paths.append([total_distances_traveled, total_time])
 
         return paths
 
     def run_instances(self, Method, name, verbose, print_validation, **kwargs):
-        folder_path = "/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances"
+        folder_path = "../mtVRP Instances"
+        folder_path = os.path.abspath(folder_path)
         files = os.listdir(folder_path)
         files = sorted(files)
 
@@ -154,6 +163,7 @@ class MainMethods():
             problem_information, nodes, cont = self.read_data(folder_path + "/" + file)
             dist_matrix = self.compute_distances()
             demands = nodes[:, 3].copy()
+
 
             method_instance = Method(problem_information, dist_matrix, demands, **kwargs)
             instances.append(
@@ -170,7 +180,9 @@ if __name__ == '__main__':
     run_individual_instance = False
 
     if run_individual_instance:
-        file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP2.txt'
+        folder_path = "../mtVRP Instances"
+        folder_path = os.path.abspath(folder_path)
+        file = folder_path + '/mtVRP12.txt'
         exec = MainMethods()
         problem_information, nodes, cont = exec.read_data(file_name=file)
         dist_matrix = exec.compute_distances()
