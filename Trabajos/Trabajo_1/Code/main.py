@@ -166,7 +166,7 @@ class MainMethods():
 
 if __name__ == '__main__':
 
-    run_individual_instance = False
+    run_individual_instance = True
 
     if run_individual_instance:
         file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt'
@@ -175,19 +175,19 @@ if __name__ == '__main__':
         dist_matrix = exec.compute_distances()
 
         demands = nodes[:, 3].copy()
-        exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands), verbose=False)
+        exec.run_method(method=ConstructiveMethod2(problem_information, dist_matrix, demands), verbose=True, print_validation=True)
 
-        max_iterations = 10000
+        max_iterations = 1000
         k = 2
         demands = nodes[:, 3].copy()
         exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations=max_iterations, k=k), verbose=True, print_validation=True)
 
-        std = 0.2
+        std = 0.01
         demands = nodes[:, 3].copy()
-        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std=std))
+        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std=std), verbose=True, print_validation=True)
 
 
-    run_all_instances = True
+    run_all_instances = False
 
     if run_all_instances:
         exec = MainMethods()
@@ -198,5 +198,5 @@ if __name__ == '__main__':
         k = 2
         exec.run_instances(Method=GRASP2, name="mtVRP_Cristian_Alzate_Urrea_GRASP.xlsx", verbose=False, print_validation=False, max_iterations=max_iterations, k=k)
 
-        std = 0.2
+        std = 0.01
         exec.run_instances(Method=Noise, name="mtVRP_Cristian_Alzate_Urrea_Noise.xlsx", verbose=False, print_validation=False, std=std)
