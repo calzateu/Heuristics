@@ -145,6 +145,7 @@ class MainMethods():
     def run_instances(self, Method, name, verbose, print_validation, **kwargs):
         folder_path = "/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances"
         files = os.listdir(folder_path)
+        files = sorted(files)
 
         instances = []
         for file in files:
@@ -166,10 +167,10 @@ class MainMethods():
 
 if __name__ == '__main__':
 
-    run_individual_instance = True
+    run_individual_instance = False
 
     if run_individual_instance:
-        file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP1.txt'
+        file = '/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances/mtVRP2.txt'
         exec = MainMethods()
         problem_information, nodes, cont = exec.read_data(file_name=file)
         dist_matrix = exec.compute_distances()
@@ -183,20 +184,22 @@ if __name__ == '__main__':
         exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations=max_iterations, k=k), verbose=True, print_validation=True)
 
         std = 0.01
+        max_iterations = 1000
         demands = nodes[:, 3].copy()
-        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std=std), verbose=True, print_validation=True)
+        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std=std, max_iterations=max_iterations), verbose=True, print_validation=True)
 
 
-    run_all_instances = False
+    run_all_instances = True
 
     if run_all_instances:
         exec = MainMethods()
 
         exec.run_instances(Method=ConstructiveMethod2, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False, print_validation=False)
 
-        max_iterations = 100
+        max_iterations_GRASP = 100
         k = 2
-        exec.run_instances(Method=GRASP2, name="mtVRP_Cristian_Alzate_Urrea_GRASP.xlsx", verbose=False, print_validation=False, max_iterations=max_iterations, k=k)
+        exec.run_instances(Method=GRASP2, name="mtVRP_Cristian_Alzate_Urrea_GRASP.xlsx", verbose=False, print_validation=False, max_iterations=max_iterations_GRASP, k=k)
 
+        max_iterations_Noise = 100
         std = 0.01
-        exec.run_instances(Method=Noise, name="mtVRP_Cristian_Alzate_Urrea_Noise.xlsx", verbose=False, print_validation=False, std=std)
+        exec.run_instances(Method=Noise, name="mtVRP_Cristian_Alzate_Urrea_Noise.xlsx", verbose=False, print_validation=False, std=std, max_iterations=max_iterations_Noise)
