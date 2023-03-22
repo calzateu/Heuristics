@@ -142,7 +142,7 @@ class MainMethods():
 
         return paths
 
-    def run_instances(self, Method, name, verbose, print_validation):
+    def run_instances(self, Method, name, verbose, print_validation, **kwargs):
         folder_path = "/home/cristian/Descargas/Universidad/7_2023-1/Heuristica/Heuristics/Trabajos/Trabajo_1/mtVRP Instances"
         files = os.listdir(folder_path)
 
@@ -154,7 +154,7 @@ class MainMethods():
             dist_matrix = self.compute_distances()
             demands = nodes[:, 3].copy()
 
-            method_instance = Method(problem_information, dist_matrix, demands)
+            method_instance = Method(problem_information, dist_matrix, demands, **kwargs)
             instances.append(
                 {'name': file,
                  'nodes': self.run_method(method=method_instance, verbose=verbose, print_validation=print_validation)
@@ -180,19 +180,23 @@ if __name__ == '__main__':
         max_iterations = 10000
         k = 2
         demands = nodes[:, 3].copy()
-        exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations, k), verbose=True, print_validation=True)
+        exec.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations=max_iterations, k=k), verbose=True, print_validation=True)
 
         std = 0.2
         demands = nodes[:, 3].copy()
-        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std))
+        exec.run_method(method=Noise(problem_information, dist_matrix, demands, std=std))
 
 
     run_all_instances = True
 
     if run_all_instances:
-        demands = nodes[:, 3].copy()
-        exec.run_instances(Method=ConstructiveMethod2, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False)
+        exec = MainMethods()
 
-        demands = nodes[:, 3].copy()
-        exec.run_instances(Method=GRASP, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False)
+        exec.run_instances(Method=ConstructiveMethod2, name="mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx", verbose=False, print_validation=False)
 
+        max_iterations = 100
+        k = 2
+        exec.run_instances(Method=GRASP2, name="mtVRP_Cristian_Alzate_Urrea_GRASP.xlsx", verbose=False, print_validation=False, max_iterations=max_iterations, k=k)
+
+        std = 0.2
+        exec.run_instances(Method=Noise, name="mtVRP_Cristian_Alzate_Urrea_Noise.xlsx", verbose=False, print_validation=False, std=std)

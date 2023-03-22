@@ -4,8 +4,8 @@ from collections import defaultdict
 import random
 
 class Noise():
-    def __init__(self, problem_information, dist_matrix, demands, std) -> None:
-        print("Constructive")
+    def __init__(self, problem_information, dist_matrix, demands, **kwargs) -> None:
+        print("Noise")
 
         self.number_of_nodes        = problem_information[0]
         self.number_of_vehicles     = int(problem_information[1])
@@ -14,7 +14,7 @@ class Noise():
 
         self.dist_matrix            = dist_matrix
         self.demands                = demands
-        self.std                    = std
+        self.std                    = kwargs["std"]
 
         self.visited_nodes          = defaultdict(lambda: False)
 
@@ -24,8 +24,6 @@ class Noise():
         min_metric_node   = np.inf
 
         max_distance = max(distances)
-        min_distance = sorted(distances)[1] # Min distance except the 0
-        print("Min distance", min_distance)
 
         metrics = [0]*len(distances)
         for i in range(len(distances)):

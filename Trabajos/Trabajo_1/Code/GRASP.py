@@ -3,7 +3,7 @@ from collections import defaultdict
 import random
 
 class GRASP():
-    def __init__(self, problem_information, dist_matrix, demands, max_iterations, k) -> None:
+    def __init__(self, problem_information, dist_matrix, demands, **kwargs) -> None:
         print("GRASP")
 
         self.number_of_nodes        = int(problem_information[0])
@@ -16,8 +16,8 @@ class GRASP():
 
         self.visited_nodes          = defaultdict(lambda: False)
 
-        self.max_iterations = max_iterations
-        self.k = k
+        self.max_iterations = kwargs["max_iterations"]
+        self.k = kwargs["k"]
 
     def build_initial_solution(self):
         solution = [[0] for _ in range(self.number_of_vehicles)]
