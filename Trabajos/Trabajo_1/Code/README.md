@@ -31,7 +31,7 @@ The **main.py** file contains the implementation of the MainMethods class. This 
 - matplotlib.pyplot
 - openpyxl
 
-To install them use the following command on your terminal:
+To install them use the following command on your terminal inside of **Heuristics/Trabajos/Trabajo_1/Code/**:
 ```
 pip install -r requirements.txt
 ```
