@@ -24,7 +24,7 @@ The **main.py** file contains the implementation of the MainMethods class. This 
 
 - **run_method(self, method, verbose, print_validation):** Method to run the given algorithm on the input data. It returns the generated paths along with the total time taken by the algorithm and the total distance traveled by all the paths.
 
-- **run_instances(self, Method, name, verbose, print_validation, **kwargs):** Method to run the given algorithm on all the input data files in a given folder. It saves the generated solutions in an Excel file. It takes the algorithm class as input along with other optional arguments for the algorithm.
+- **run_instances(self, Method, name, verbose, print_validation, \*\*kwargs):** Method to run the given algorithm on all the input data files in a given folder. It saves the generated solutions in an Excel file. It takes the algorithm class as input along with other optional arguments for the algorithm.
 
 ## Dependencies
 - numpy
