@@ -40,10 +40,27 @@ pip install -r requirements.txt
 Import the MainMethods class from the module. Create an object of the MainMethods class. Call the **run_instances()** method to run the algorithm on all the input data files in a given folder and save the generated solutions in an Excel file.
 
 ```
-from MainMethods import MainMethods
+from main import MainMethods
+from GRASP import GRASP
 
 mm = MainMethods()
 
-mm.run_instances(Method=GRASP, name="GRASP_Results.xlsx", verbose=False, print_validation=False, max_iter=100)
+mm.run_instances(Method=GRASP, name="GRASP_Results.xlsx", verbose=True, print_validation=False, max_iterations=100, k=2)
+```
 
+Or simply call the **run_method()** to test a single dataset.
+```
+from main import MainMethods
+from GRASP import GRASP
+
+folder_path = "../mtVRP Instances"
+folder_path = os.path.abspath(folder_path)
+file = folder_path + '/mtVRP12.txt'
+mm = MainMethods()
+
+problem_information, nodes, cont = mm.read_data(file_name=file)
+dist_matrix = mm.compute_distances()
+
+
+mm.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations=100, k=2), verbose=verbose, graph=graph)
 ```
