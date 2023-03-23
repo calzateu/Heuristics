@@ -131,6 +131,10 @@ class MainMethods():
             for row in instance['nodes']:
                 worksheet.append(row)
 
+        # Delete the default sheet (index 0)
+        sheet_to_delete = workbook['Sheet']
+        del workbook[sheet_to_delete.title]
+
         # Save the workbook
         workbook.save(name)
 
