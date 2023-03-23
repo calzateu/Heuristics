@@ -50,6 +50,8 @@ mm.run_instances(Method=GRASP, name="GRASP_Results.xlsx", verbose=True, print_va
 
 Or simply call the **run_method()** to test a single dataset.
 ```
+import os
+
 from main import MainMethods
 from GRASP import GRASP
 
@@ -61,6 +63,9 @@ mm = MainMethods()
 problem_information, nodes, cont = mm.read_data(file_name=file)
 dist_matrix = mm.compute_distances()
 
+verbose=True
+graph=True
 
-mm.run_method(method=GRASP2(problem_information, dist_matrix, demands, max_iterations=100, k=2), verbose=verbose, graph=graph)
+demands = nodes[:, 3].copy()
+mm.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations=100, k=2), verbose=verbose, graph=graph)
 ```
