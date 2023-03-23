@@ -31,6 +31,11 @@ The **main.py** file contains the implementation of the MainMethods class. This 
 - matplotlib.pyplot
 - openpyxl
 
+To install them use the following command on your terminal:
+```
+pip install -r requirements.txt
+```
+
 ## Usage
 Import the MainMethods class from the module. Create an object of the MainMethods class. Call the **run_instances()** method to run the algorithm on all the input data files in a given folder and save the generated solutions in an Excel file.
 
