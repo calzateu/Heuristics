@@ -69,4 +69,3 @@ graph=True
 demands = nodes[:, 3].copy()
 mm.run_method(method=GRASP(problem_information, dist_matrix, demands, max_iterations=100, k=2), verbose=verbose, graph=graph)
 ```
-
