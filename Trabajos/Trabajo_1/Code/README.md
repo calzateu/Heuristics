@@ -1,4 +1,4 @@
-This Python file contains the implementation of the MainMethods class. This class is designed to solve a specific problem, the "Multi-trip Vehicle Routing Problem" (mtVRP). The class is responsible for reading data from files, computing distances between nodes, validating solutions, plotting routes, saving solutions to Excel files, running methods to solve the mtVRP, and running instances.
+The **main.py** file contains the implementation of the MainMethods class. This class is designed to solve a specific problem, the "Multi-trip Vehicle Routing Problem" (mtVRP). The class is responsible for reading data from files, computing distances between nodes, validating solutions, plotting routes, saving solutions to Excel files, running methods to solve the mtVRP, and running instances.
 
 ## Modules
 - constructive
