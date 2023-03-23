@@ -4,7 +4,6 @@ from collections import defaultdict
 
 class ConstructiveMethod():
     def __init__(self, problem_information, dist_matrix, demands, alpha) -> None:
-        print("Constructive")
 
         self.number_of_nodes        = problem_information[0]
         self.number_of_vehicles     = int(problem_information[1])

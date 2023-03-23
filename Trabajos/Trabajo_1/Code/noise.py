@@ -5,7 +5,6 @@ import random
 
 class Noise():
     def __init__(self, problem_information, dist_matrix, demands, **kwargs) -> None:
-        print("Noise")
 
         self.number_of_nodes        = problem_information[0]
         self.number_of_vehicles     = int(problem_information[1])

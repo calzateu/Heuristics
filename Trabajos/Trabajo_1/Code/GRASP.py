@@ -4,7 +4,6 @@ import random
 
 class GRASP():
     def __init__(self, problem_information, dist_matrix, demands, **kwargs) -> None:
-        print("GRASP")
 
         self.number_of_nodes        = int(problem_information[0])
         self.number_of_vehicles     = int(problem_information[1])
