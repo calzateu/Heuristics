@@ -2,6 +2,7 @@ The **main.py** file contains the implementation of the MainMethods class. This 
 
 ## Modules
 - constructive
+- constructive1
 - constructive2
 - GRASP
 - GRASP2
