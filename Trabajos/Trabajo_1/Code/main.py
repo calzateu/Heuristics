@@ -66,6 +66,7 @@ class MainMethods():
 
     def __validate_solutions(self, paths, method, verbose):
         total_distances_traveled = 0
+        feasible_path = 0
         nodes_visited = 0
 
         for i in paths:
@@ -94,6 +95,7 @@ class MainMethods():
 
             if distance > method.max_distance:
                 i.append(1)
+                feasible_path = 1
             else:
                 i.append(0)
 
@@ -102,7 +104,7 @@ class MainMethods():
             print("Total distance: ", total_distances_traveled)
             print("Num nodes visited", nodes_visited)
 
-        return total_distances_traveled
+        return total_distances_traveled, feasible_path
 
     def plot_routes(self, routes):
         plt.plot(self.nodes[0][1], self.nodes[0][2], "o")
@@ -152,9 +154,9 @@ class MainMethods():
         if graph:
             self.plot_routes(paths)
 
-        total_distances_traveled = self.__validate_solutions(paths=paths, method=method, verbose=verbose)
+        total_distances_traveled, feasible_path = self.__validate_solutions(paths=paths, method=method, verbose=verbose)
 
-        paths.append([total_distances_traveled, total_time])
+        paths.append([total_distances_traveled, total_time, feasible_path])
 
         return paths
 
