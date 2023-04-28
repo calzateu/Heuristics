@@ -172,3 +172,49 @@ class Utils():
 
         self.save_solution(instances=instances, name=name)
 
+
+
+    def read_solutions(self, path_to_file):
+        # solution = []
+
+        # cont = 0
+        # with open(path_to_file, 'r') as file:
+        #     for line in file:
+        #         line = list(map(int, line.split()))
+        #         solution.append(line)
+
+        #         cont += 1
+
+        # return solution, cont
+
+
+        # Leer el archivo de Excel
+        excel_file = openpyxl.load_workbook(path_to_file)
+
+        # Crear un diccionario vacío para almacenar la información de las rutas
+        instances_dict = {}
+
+        # Iterar a través de cada hoja de cálculo correspondiente a cada instancia
+        for sheet_name in excel_file.sheetnames:
+            # Obtener la hoja de cálculo actual
+            sheet = excel_file[sheet_name]
+
+            # Iterar a través de las filas para obtener información de las rutas
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                # Acceder a los valores de cada columna
+                row = np.array(row)
+                row = row[[True if row_1 != None else False for row_1 in row]]
+                ruta = row[:-2]
+                tiempo_de_servicio = row[-2]
+                factibilidad = row[-1]
+
+                # Almacenar la información de las rutas en el diccionario
+                if sheet_name not in instances_dict:
+                    instances_dict[sheet_name] = []
+                instances_dict[sheet_name].append({
+                    'ruta': ruta,
+                    'distancia_recorrida': tiempo_de_servicio,
+                    'factibilidad': factibilidad
+                })
+
+        return instances_dict
