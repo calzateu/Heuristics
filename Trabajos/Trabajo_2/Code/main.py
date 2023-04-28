@@ -3,10 +3,6 @@ import os
 
 
 # My modules
-from constructive3 import ConstructiveMethod3
-from GRASP3 import GRASP3
-from noise2 import Noise2
-
 from utils import Utils
 
 if __name__ == '__main__':
