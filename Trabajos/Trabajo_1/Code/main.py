@@ -226,10 +226,10 @@ if __name__ == '__main__':
 
         exec.run_instances(Method=ConstructiveMethod3, name="mtVRP_Cristian_Alzate_Urrea_constructivo2.xlsx", verbose=verbose, graph=graph)
 
-        max_iterations_GRASP = 100
+        max_iterations_GRASP = 200
         k = 2
         exec.run_instances(Method=GRASP3, name="mtVRP_Cristian_Alzate_Urrea_GRASP2.xlsx", verbose=verbose, graph=graph,max_iterations=max_iterations_GRASP, k=k)
 
-        max_iterations_Noise = 100
+        max_iterations_Noise = 200
         std = 0.01
         exec.run_instances(Method=Noise2, name="mtVRP_Cristian_Alzate_Urrea_Noise2.xlsx", verbose=verbose, graph=graph, std=std, max_iterations=max_iterations_Noise)
