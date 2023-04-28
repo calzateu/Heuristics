@@ -216,7 +216,7 @@ if __name__ == '__main__':
         exec.run_method(method=Noise2(problem_information, dist_matrix, demands, std=std, max_iterations=max_iterations), verbose=verbose, graph=graph)
 
 
-    run_all_instances = False
+    run_all_instances = True
 
     if run_all_instances:
         exec = MainMethods()
