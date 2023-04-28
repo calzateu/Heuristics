@@ -148,8 +148,7 @@ class Utils():
 
         return paths
 
-    def run_instances(self, Method, name, verbose=False, graph=False, **kwargs):
-        folder_path = "../../mtVRP Instances"
+    def run_instances(self, Method, name, folder_path, verbose=False, graph=False, **kwargs):
         folder_path = os.path.abspath(folder_path)
         files = os.listdir(folder_path)
         files = sorted(files)
