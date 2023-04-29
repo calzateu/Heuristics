@@ -13,7 +13,7 @@ if __name__ == '__main__':
     folder_path = "../../mtVRP Instances"
     folder_path = os.path.abspath(folder_path)
 
-    instance = 'mtVRP9.txt'
+    instance = 'mtVRP2.txt'
     file_data = folder_path + '/' + instance
 
     problem_information, nodes, cont = utils.read_data(file_name=file_data)
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     #solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx')
     solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_Noise.xlsx')
-    neighborhoods = [two_opt, insertion, relocation]
+    neighborhoods = [two_opt, insertion, brute_force_relocation]# relocation]
 
 
     max_capacity = problem_information[2]

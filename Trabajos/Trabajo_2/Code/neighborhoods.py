@@ -122,3 +122,60 @@ def relocation(trips, traveled_distances, dist_matrix, **kwargs):
 
     return trips, traveled_distances, better
 
+
+def brute_force_relocation(trips, traveled_distances, dist_matrix, **kwargs):
+
+    demands = kwargs['demands']
+    max_capacity = kwargs['max_capacity']
+
+    # for i in range(len(trips)):
+    #     for j in range(len(trips)):
+    #         print(i,j)
+    #         for k in range(len(trips[i])):
+    #             for l in range(len(trips[j])):
+
+    i = 0
+    j = 0
+    k = 0
+    l = 0
+    while i < len(trips):
+        while j < len(trips):
+            while k < len(trips[i]):
+                while l < len(trips[j]):
+
+                    better = False
+
+                    # i, j = random.sample(range(num_trips), 2)
+
+                    # k = random.randint(1, len(trips[i])-2)
+                    # l = random.randint(1, len(trips[j])-2)
+
+                    costumer = trips[i].pop(k)
+                    trips[j].insert(l, costumer)
+
+                    capacity_i = __check_capacity(trips[i], demands, max_capacity)
+                    capacity_j = __check_capacity(trips[j], demands, max_capacity)
+                    valid = capacity_i + capacity_j # Es válido si los dos suman cero. Sino,
+                                                    # se excedió la capacidad y es igual a inf
+
+                    # Acá debo multiplicar por una variable binaria de si se cumple la capacidad o no
+                    if __traveled_distance(trips[i], dist_matrix)+__traveled_distance(trips[j],
+                            dist_matrix) + valid >= traveled_distances[i] + traveled_distances[j]:
+                        # Si es peor devuelve los cambios
+                        #print(valid)
+                        restored_customer = trips[j].pop(l)
+                        trips[i].insert(k, restored_customer)
+                    else:
+                        traveled_distances[i] = __traveled_distance(trips[i], dist_matrix)
+                        traveled_distances[j] = __traveled_distance(trips[j], dist_matrix)
+                        print('Mejoro', sum(traveled_distances))
+                        better = True
+
+                        k -= 1
+
+                    l += 1
+                k += 1
+            j += 1
+        i += 1
+
+    return trips, traveled_distances, better

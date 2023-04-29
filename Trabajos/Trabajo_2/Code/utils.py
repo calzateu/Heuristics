@@ -270,7 +270,7 @@ class Utils():
         while j < len(neighborhoods):
             new_trip, new_traveled_distances, better = neighborhoods[j](trips,
                 traveled_distances, dist_matrix, demands = demands,
-                max_capacity=max_capacity, num_insertions=1000000, num_relocations=10000)
+                max_capacity=max_capacity, num_insertions=10000, num_relocations=1000000)
             if better:
                 j = 0
                 trips = new_trip
