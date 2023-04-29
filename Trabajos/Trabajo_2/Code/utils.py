@@ -48,7 +48,7 @@ class Utils():
     def __traveled_distance(self, path):
         distance = 0
         for i in range(len(path)-1):
-            distance += self.dist_matrix[path[i], path[i+1]]
+            distance += self.dist_matrix[int(path[i]), int(path[i+1])]
 
         return distance
 
@@ -200,7 +200,7 @@ class Utils():
             sheet = excel_file[sheet_name]
 
             # Iterar a través de las filas para obtener información de las rutas
-            for row in sheet.iter_rows(min_row=2, values_only=True):
+            for row in sheet.iter_rows(min_row=1, values_only=True):
                 # Acceder a los valores de cada columna
                 row = np.array(row)
                 row = row[[True if row_1 != None else False for row_1 in row]]
@@ -212,9 +212,73 @@ class Utils():
                 if sheet_name not in instances_dict:
                     instances_dict[sheet_name] = []
                 instances_dict[sheet_name].append({
-                    'ruta': ruta,
+                    'ruta': [0] + ruta + [0],
                     'distancia_recorrida': tiempo_de_servicio,
                     'factibilidad': factibilidad
                 })
 
         return instances_dict
+
+
+    def __split_path(self, path_information):
+        # Dividir la lista cada vez que aparezca el cero (deposito)
+        sub_lists = []
+        sub_list = []
+        for item in path_information['ruta']:
+            if item == 0:
+                if sub_list != []:
+                    sub_lists.append([0] + sub_list + [0])
+                sub_list = []
+            else:
+                sub_list.append(item)
+
+        if sub_list != []:
+                    sub_lists.append(sub_list)
+
+        return sub_lists
+
+    def __split_information(self, solution):
+
+        trips = []
+
+        for path_information in solution[:-1]:
+            trips.extend(self.__split_path(path_information))
+
+        return trips
+
+    def __initial_solution(self, solution):
+        trips = self.__split_information(solution)
+
+        traveled_distances = []
+
+        for trip in trips:
+            traveled_distances.append(self.__traveled_distance(trip))
+
+        print(trips)
+        print(traveled_distances)
+
+        return trips, traveled_distances
+
+    def VND(self, solution, neighborhoods, dist_matrix):
+        trips, traveled_distances = self.__initial_solution(solution)
+
+        j = 0
+        while j < len(neighborhoods):
+            new_trip, new_traveled_distances, better = neighborhoods[j](trips, traveled_distances, dist_matrix)
+            if better:
+                j = 0
+                trips = new_trip
+                traveled_distances = new_traveled_distances
+            else:
+                j = j+1
+
+        return trips, traveled_distances
+
+
+    def apply_VND_all_instances(self, solutions):
+
+        for key in solutions.keys():
+            print(f'######### {key} #########')
+            self.VND(solutions[key])
+
+        return None
