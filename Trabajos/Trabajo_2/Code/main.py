@@ -12,17 +12,22 @@ if __name__ == '__main__':
 
     folder_path = "../../mtVRP Instances"
     folder_path = os.path.abspath(folder_path)
-    file = folder_path + '/mtVRP1.txt'
 
-    utils.read_data(file_name=file)
+    instance = 'mtVRP1.txt'
+    file_data = folder_path + '/' + instance
+
+    problem_information, nodes, cont = utils.read_data(file_name=file_data)
     dist_matrix = utils.compute_distances()
 
     #solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx')
     solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_Noise.xlsx')
-    neighborhoods = [two_opt]
+    neighborhoods = [two_opt, swap_customers]
+
+
+    max_capacity = problem_information[2]
 
     #utils.apply_VND_all_instances(solutions)
-    trips, traveled_distances = utils.VND(solutions['mtVRP1.txt'], neighborhoods, dist_matrix)
+    trips, traveled_distances = utils.VND(solutions[instance], neighborhoods, dist_matrix, demands=nodes[:, 3], max_capacity=max_capacity)
 
     print()
     print(trips, traveled_distances)

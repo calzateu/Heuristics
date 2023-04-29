@@ -259,18 +259,23 @@ class Utils():
 
         return trips, traveled_distances
 
-    def VND(self, solution, neighborhoods, dist_matrix):
+    def VND(self, solution, neighborhoods, dist_matrix, demands, max_capacity):
         trips, traveled_distances = self.__initial_solution(solution)
 
         j = 0
         while j < len(neighborhoods):
-            new_trip, new_traveled_distances, better = neighborhoods[j](trips, traveled_distances, dist_matrix)
+            new_trip, new_traveled_distances, better = neighborhoods[j](trips, traveled_distances, dist_matrix, demands = demands, max_capacity=max_capacity, num_swaps=10000)
             if better:
                 j = 0
                 trips = new_trip
                 traveled_distances = new_traveled_distances
+
+                print(str(neighborhoods[j]))
+                print(traveled_distances)
             else:
                 j = j+1
+
+        print('Ultimo', traveled_distances)
 
         return trips, traveled_distances
 
