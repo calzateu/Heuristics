@@ -13,7 +13,7 @@ if __name__ == '__main__':
     folder_path = "../../mtVRP Instances"
     folder_path = os.path.abspath(folder_path)
 
-    instance = 'mtVRP1.txt'
+    instance = 'mtVRP7.txt'
     file_data = folder_path + '/' + instance
 
     problem_information, nodes, cont = utils.read_data(file_name=file_data)
@@ -29,5 +29,3 @@ if __name__ == '__main__':
     #utils.apply_VND_all_instances(solutions)
     trips, traveled_distances = utils.VND(solutions[instance], neighborhoods, dist_matrix, demands=nodes[:, 3], max_capacity=max_capacity)
 
-    print()
-    print(trips, traveled_distances)

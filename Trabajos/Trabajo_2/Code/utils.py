@@ -104,8 +104,8 @@ class Utils():
             plt.text(x[i], y[i]+0.5, '{}'.format(i+1))
 
         for i in range(len(routes)):
-            x = self.nodes[routes[i], [1]*len(routes[i])]
-            y = self.nodes[routes[i], [2]*len(routes[i])]
+            x = self.nodes[list(map(int, routes[i])), [1]*len(routes[i])]
+            y = self.nodes[list(map(int, routes[i])), [2]*len(routes[i])]
             plt.plot(x, y, label="Vehicle: " + str(i+1))
 
         plt.legend()
@@ -254,28 +254,38 @@ class Utils():
         for trip in trips:
             traveled_distances.append(self.__traveled_distance(trip))
 
-        print(trips)
-        print(traveled_distances)
-
         return trips, traveled_distances
 
     def VND(self, solution, neighborhoods, dist_matrix, demands, max_capacity):
         trips, traveled_distances = self.__initial_solution(solution)
 
+        print('################# Initial solution #################')
+        print(trips)
+        print(traveled_distances)
+        print(sum(traveled_distances))
+
+        #self.plot_routes(trips)
+
         j = 0
         while j < len(neighborhoods):
-            new_trip, new_traveled_distances, better = neighborhoods[j](trips, traveled_distances, dist_matrix, demands = demands, max_capacity=max_capacity, num_swaps=10000)
+            new_trip, new_traveled_distances, better = neighborhoods[j](trips,
+                traveled_distances, dist_matrix, demands = demands,
+                max_capacity=max_capacity, num_swaps=10000)
             if better:
                 j = 0
                 trips = new_trip
                 traveled_distances = new_traveled_distances
 
-                print(str(neighborhoods[j]))
-                print(traveled_distances)
             else:
                 j = j+1
 
-        print('Ultimo', traveled_distances)
+        print()
+        print('################# Final solution #################')
+        print(trips)
+        print(traveled_distances)
+        print(sum(traveled_distances))
+
+        #self.plot_routes(trips)
 
         return trips, traveled_distances
 

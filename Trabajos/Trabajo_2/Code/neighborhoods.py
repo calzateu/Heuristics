@@ -71,7 +71,8 @@ def swap_customers(trips, traveled_distances, dist_matrix, **kwargs):
                                         # se excedió la capacidad y es igual a inf
 
         # Acá debo multiplicar por una variable binaria de si se cumple la capacidad o no
-        if __traveled_distance(trips[i], dist_matrix) + __traveled_distance(trips[j], dist_matrix) + valid > traveled_distances[i] + traveled_distances[j]:
+        if __traveled_distance(trips[i], dist_matrix)+__traveled_distance(trips[j],
+                dist_matrix) + valid > traveled_distances[i] + traveled_distances[j]:
             # Si es peor devuelve los cambios
             trips[i][k], trips[j][l] = trips[j][l], trips[i][k]
             traveled_distances[i] = __traveled_distance(trips[i], dist_matrix)
