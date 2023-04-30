@@ -136,12 +136,12 @@ def brute_force_relocation(trips, traveled_distances, dist_matrix, **kwargs):
 
     i = 0
     j = 0
-    k = 0
-    l = 0
+    k = 1
+    l = 1
     while i < len(trips):
         while j < len(trips):
-            while k < len(trips[i]):
-                while l < len(trips[j]):
+            while k < len(trips[i]) - 1:
+                while l < len(trips[j]) - 1:
 
                     better = False
 

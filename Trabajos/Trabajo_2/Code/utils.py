@@ -264,7 +264,7 @@ class Utils():
         print(traveled_distances)
         print(sum(traveled_distances))
 
-        #self.plot_routes(trips)
+        self.plot_routes(trips)
 
         j = 0
         while j < len(neighborhoods):
@@ -285,7 +285,7 @@ class Utils():
         print(traveled_distances)
         print(sum(traveled_distances))
 
-        #self.plot_routes(trips)
+        self.plot_routes(trips)
 
         return trips, traveled_distances
 
