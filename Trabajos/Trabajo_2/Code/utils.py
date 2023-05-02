@@ -297,3 +297,12 @@ class Utils():
             self.VND(solutions[key])
 
         return None
+
+def distance_exceed(traveled_distances, max_distance):
+        distance = 0
+        exceed = 0
+        for i in traveled_distances:
+            if i > max_distance:
+                exceed += i - max_distance
+
+        return exceed

@@ -37,13 +37,16 @@ def __initial_solution(solution, dist_matrix):
 
     return trips, traveled_distances
 
-def VND(solution, neighborhoods, dist_matrix, demands, max_capacity):
-    trips, traveled_distances = __initial_solution(solution, dist_matrix)
+def VND(solution, neighborhoods, dist_matrix, demands, max_capacity, preprocess=True, traveled_distances=None):
+    if preprocess:
+        trips, traveled_distances = __initial_solution(solution, dist_matrix)
+    else:
+        trips = solution
 
-    print('################# Initial solution #################')
-    print(trips)
-    print(traveled_distances)
-    print(sum(traveled_distances))
+    # print('################# Initial solution #################')
+    # print(trips)
+    # print(traveled_distances)
+    # print(sum(traveled_distances))
 
     #self.plot_routes(trips)
 
@@ -60,11 +63,11 @@ def VND(solution, neighborhoods, dist_matrix, demands, max_capacity):
         else:
             j = j+1
 
-    print()
-    print('################# Final solution #################')
-    print(trips)
-    print(traveled_distances)
-    print(sum(traveled_distances))
+    # print()
+    # print('################# Final solution #################')
+    # print(trips)
+    # print(traveled_distances)
+    # print(sum(traveled_distances))
 
     #self.plot_routes(trips)
 

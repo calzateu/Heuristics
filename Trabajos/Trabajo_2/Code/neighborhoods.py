@@ -29,6 +29,9 @@ def two_opt(trips, traveled_distances, dist_matrix, **kwargs):
     demands = kwargs['demands']
     max_capacity = kwargs['max_capacity']
 
+    #print('len(trips)', len(trips))
+    #print('len(traveled_distances)', len(traveled_distances))
+
     for i in range(len(trips)):
         n = len(trips[i])
         for j in range(1, n-1):
@@ -168,7 +171,7 @@ def brute_force_relocation(trips, traveled_distances, dist_matrix, **kwargs):
                     else:
                         traveled_distances[i] = traveled_distance(trips[i], dist_matrix)
                         traveled_distances[j] = traveled_distance(trips[j], dist_matrix)
-                        print('Mejoro', sum(traveled_distances))
+                        #print('Mejoro', sum(traveled_distances))
                         better = True
 
                         k -= 1
