@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     #solution, traveled_distances = ELS(utils, problem_information, dist_matrix, demands, max_capacity, ni=5, nc=2)
     solution, traveled_distances = MS_ELS(utils, problem_information, dist_matrix,
-        demands, max_capacity, max_distance, ni=10, nc=5, nsol=5, std=0.01, max_iterations=200)
+        demands, max_capacity, max_distance, ni=10, nc=10, nsol=10, std=0.01, max_iterations=200)
 
 
     print(solution)

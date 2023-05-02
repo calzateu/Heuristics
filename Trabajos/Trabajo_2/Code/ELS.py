@@ -51,11 +51,11 @@ def mutate_random(trips, traveled_distances, dist_matrix, **kwargs):
             if len(trips[i]) <= 2:
                 del(trips[i])
                 del(traveled_distances[i])
-                i, j = random.sample(range(len(trips)), 2)
             elif len(trips[j]) <= 2:
                 del(trips[j])
                 del(traveled_distances[j])
-                i, j = random.sample(range(len(trips)), 2)
+
+            i, j = random.sample(range(len(trips)), 2)
 
 
             if len(trips) < 1:
@@ -86,14 +86,15 @@ def mutate_random(trips, traveled_distances, dist_matrix, **kwargs):
                 print(trips[i])
                 del(trips[i])
                 del(traveled_distances[i])
-                i, j = random.sample(range(len(trips)), 2)
-                print(trips[i])
             elif len(trips[j]) <= 2:
                 print(trips[j])
                 del(trips[j])
                 del(traveled_distances[j])
-                i, j = random.sample(range(len(trips)), 2)
-                print(trips[j])
+
+            if len(trips) < 2:
+                    return trips, traveled_distances
+
+            i, j = random.sample(range(len(trips)), 2)
 
 
 

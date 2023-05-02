@@ -54,14 +54,31 @@ def two_opt(trips, traveled_distances, dist_matrix, **kwargs):
 
 # Define the insertion neighborhood structure
 def insertion(trips, traveled_distances, dist_matrix, **kwargs):
-    num_trips = len(trips)
 
     demands = kwargs['demands']
     max_capacity = kwargs['max_capacity']
 
     for _ in range(kwargs['num_insertions']):
         better = False
-        i, j = random.sample(range(num_trips), 2)
+
+        if len(trips) < 2:
+            return trips, traveled_distances
+
+        i, j = random.sample(range(len(trips)), 2)
+
+        while len(trips[i]) <= 2 or len(trips[j]) <= 2:
+            if len(trips[i]) <= 2:
+                del(trips[i])
+                del(traveled_distances[i])
+                i, j = random.sample(range(len(trips)), 2)
+            elif len(trips[j]) <= 2:
+                del(trips[j])
+                del(traveled_distances[j])
+                i, j = random.sample(range(len(trips)), 2)
+
+
+            if len(trips) < 1:
+                return trips, traveled_distances
 
         k = random.randint(1, len(trips[i])-2)
         l = random.randint(1, len(trips[j])-2)
@@ -96,7 +113,25 @@ def relocation(trips, traveled_distances, dist_matrix, **kwargs):
 
     for _ in range(kwargs['num_relocations']):
         better = False
+
+        if len(trips) < 2:
+            return trips, traveled_distances
+
         i, j = random.sample(range(num_trips), 2)
+
+        while len(trips[i]) <= 2 or len(trips[j]) <= 2:
+            if len(trips[i]) <= 2:
+                del(trips[i])
+                del(traveled_distances[i])
+                i, j = random.sample(range(len(trips)), 2)
+            elif len(trips[j]) <= 2:
+                del(trips[j])
+                del(traveled_distances[j])
+                i, j = random.sample(range(len(trips)), 2)
+
+
+            if len(trips) < 1:
+                return trips, traveled_distances
 
         k = random.randint(1, len(trips[i])-2)
         l = random.randint(1, len(trips[j])-2)
