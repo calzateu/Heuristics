@@ -62,7 +62,7 @@ def insertion(trips, traveled_distances, dist_matrix, **kwargs):
         better = False
 
         if len(trips) < 2:
-            return trips, traveled_distances
+            return trips, traveled_distances, better
 
         i, j = random.sample(range(len(trips)), 2)
 
@@ -78,7 +78,7 @@ def insertion(trips, traveled_distances, dist_matrix, **kwargs):
 
 
             if len(trips) < 1:
-                return trips, traveled_distances
+                return trips, traveled_distances, better
 
         k = random.randint(1, len(trips[i])-2)
         l = random.randint(1, len(trips[j])-2)
@@ -115,7 +115,7 @@ def relocation(trips, traveled_distances, dist_matrix, **kwargs):
         better = False
 
         if len(trips) < 2:
-            return trips, traveled_distances
+            return trips, traveled_distances, better
 
         i, j = random.sample(range(num_trips), 2)
 
@@ -131,7 +131,7 @@ def relocation(trips, traveled_distances, dist_matrix, **kwargs):
 
 
             if len(trips) < 1:
-                return trips, traveled_distances
+                return trips, traveled_distances, better
 
         k = random.randint(1, len(trips[i])-2)
         l = random.randint(1, len(trips[j])-2)

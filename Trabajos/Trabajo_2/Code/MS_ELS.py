@@ -24,6 +24,7 @@ def MS_ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_d
             traveled_distances_asterisco = traveled_distances_S.copy()
             f_asteristo = distance_exceed(traveled_distances_S, max_distance)
 
+        # Creo que hay un problema, se están eliminando nodos
         S_prima, traveled_distances_prima = ELS(utils, problem_information, dist_matrix,
             demands, max_capacity, max_distance, ni, nc, generate_initial_solution=False, solution=S,
             traveled_distances=traveled_distances_S)
