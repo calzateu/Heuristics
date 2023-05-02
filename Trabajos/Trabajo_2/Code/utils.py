@@ -142,9 +142,9 @@ class Utils():
         if graph:
             self.plot_routes(paths)
 
-        total_distances_traveled, feasible_path = self.__validate_solutions(paths=paths, method=method, verbose=verbose)
+        #total_distances_traveled, feasible_path = self.__validate_solutions(paths=paths, method=method, verbose=verbose)
 
-        paths.append([total_distances_traveled, total_time, feasible_path])
+        #paths.append([total_distances_traveled, total_time, feasible_path])
 
         return paths
 

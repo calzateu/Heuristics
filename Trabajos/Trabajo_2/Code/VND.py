@@ -1,4 +1,4 @@
-from neighborhoods import __traveled_distance
+from neighborhoods import traveled_distance
 
 
 def __split_path(path_information):
@@ -33,7 +33,7 @@ def __initial_solution(solution, dist_matrix):
     traveled_distances = []
 
     for trip in trips:
-        traveled_distances.append(__traveled_distance(trip, dist_matrix))
+        traveled_distances.append(traveled_distance(trip, dist_matrix))
 
     return trips, traveled_distances
 

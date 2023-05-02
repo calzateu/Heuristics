@@ -1,7 +1,7 @@
 import random
 
 
-def __traveled_distance(path, dist_matrix):
+def traveled_distance(path, dist_matrix):
         distance = 0
         for i in range(len(path)-1):
             distance += dist_matrix[int(path[i]), int(path[i+1])]
@@ -9,7 +9,7 @@ def __traveled_distance(path, dist_matrix):
         return distance
 
 
-def __check_capacity(trip, demands, max_capacity):
+def check_capacity(trip, demands, max_capacity):
     ocupation = 0
 
     for j in trip:
@@ -34,11 +34,11 @@ def two_opt(trips, traveled_distances, dist_matrix, **kwargs):
         for j in range(1, n-1):
             for k in range(j+1, n):
                 new_trip = trips[i][:j] + trips[i][j:k][::-1] + trips[i][k:]
-                new_traveled_distance = __traveled_distance(new_trip, dist_matrix)
+                new_traveled_distance = traveled_distance(new_trip, dist_matrix)
 
                 # Es válido si los dos suman cero. Sino,
                 # se excedió la capacidad y es igual a inf
-                capacity_new_trip = __check_capacity(new_trip, demands, max_capacity)
+                capacity_new_trip = check_capacity(new_trip, demands, max_capacity)
 
 
                 if new_traveled_distance + capacity_new_trip < traveled_distances[i]:
@@ -65,19 +65,19 @@ def insertion(trips, traveled_distances, dist_matrix, **kwargs):
 
         trips[i][k], trips[j][l] = trips[j][l], trips[i][k]
 
-        capacity_i = __check_capacity(trips[i], demands, max_capacity)
-        capacity_j = __check_capacity(trips[j], demands, max_capacity)
+        capacity_i = check_capacity(trips[i], demands, max_capacity)
+        capacity_j = check_capacity(trips[j], demands, max_capacity)
         valid = capacity_i + capacity_j # Es válido si los dos suman cero. Sino,
                                         # se excedió la capacidad y es igual a inf
 
         # Acá debo multiplicar por una variable binaria de si se cumple la capacidad o no
-        if __traveled_distance(trips[i], dist_matrix)+__traveled_distance(trips[j],
+        if traveled_distance(trips[i], dist_matrix)+traveled_distance(trips[j],
                 dist_matrix) + valid > traveled_distances[i] + traveled_distances[j]:
             # Si es peor devuelve los cambios
             trips[i][k], trips[j][l] = trips[j][l], trips[i][k]
         else:
-            traveled_distances[i] = __traveled_distance(trips[i], dist_matrix)
-            traveled_distances[j] = __traveled_distance(trips[j], dist_matrix)
+            traveled_distances[i] = traveled_distance(trips[i], dist_matrix)
+            traveled_distances[j] = traveled_distance(trips[j], dist_matrix)
             better = True
 
 
@@ -101,21 +101,21 @@ def relocation(trips, traveled_distances, dist_matrix, **kwargs):
         costumer = trips[i].pop(k)
         trips[j].insert(l, costumer)
 
-        capacity_i = __check_capacity(trips[i], demands, max_capacity)
-        capacity_j = __check_capacity(trips[j], demands, max_capacity)
+        capacity_i = check_capacity(trips[i], demands, max_capacity)
+        capacity_j = check_capacity(trips[j], demands, max_capacity)
         valid = capacity_i + capacity_j # Es válido si los dos suman cero. Sino,
                                         # se excedió la capacidad y es igual a inf
 
         # Acá debo multiplicar por una variable binaria de si se cumple la capacidad o no
-        if __traveled_distance(trips[i], dist_matrix)+__traveled_distance(trips[j],
+        if traveled_distance(trips[i], dist_matrix)+traveled_distance(trips[j],
                 dist_matrix) + valid > traveled_distances[i] + traveled_distances[j]:
             # Si es peor devuelve los cambios
             #print(valid)
             restored_customer = trips[j].pop(l)
             trips[i].insert(k, restored_customer)
         else:
-            traveled_distances[i] = __traveled_distance(trips[i], dist_matrix)
-            traveled_distances[j] = __traveled_distance(trips[j], dist_matrix)
+            traveled_distances[i] = traveled_distance(trips[i], dist_matrix)
+            traveled_distances[j] = traveled_distance(trips[j], dist_matrix)
             print('Mejoro', sum(traveled_distances))
             better = True
 
@@ -153,21 +153,21 @@ def brute_force_relocation(trips, traveled_distances, dist_matrix, **kwargs):
                     costumer = trips[i].pop(k)
                     trips[j].insert(l, costumer)
 
-                    capacity_i = __check_capacity(trips[i], demands, max_capacity)
-                    capacity_j = __check_capacity(trips[j], demands, max_capacity)
+                    capacity_i = check_capacity(trips[i], demands, max_capacity)
+                    capacity_j = check_capacity(trips[j], demands, max_capacity)
                     valid = capacity_i + capacity_j # Es válido si los dos suman cero. Sino,
                                                     # se excedió la capacidad y es igual a inf
 
                     # Acá debo multiplicar por una variable binaria de si se cumple la capacidad o no
-                    if __traveled_distance(trips[i], dist_matrix)+__traveled_distance(trips[j],
+                    if traveled_distance(trips[i], dist_matrix)+traveled_distance(trips[j],
                             dist_matrix) + valid >= traveled_distances[i] + traveled_distances[j]:
                         # Si es peor devuelve los cambios
                         #print(valid)
                         restored_customer = trips[j].pop(l)
                         trips[i].insert(k, restored_customer)
                     else:
-                        traveled_distances[i] = __traveled_distance(trips[i], dist_matrix)
-                        traveled_distances[j] = __traveled_distance(trips[j], dist_matrix)
+                        traveled_distances[i] = traveled_distance(trips[i], dist_matrix)
+                        traveled_distances[j] = traveled_distance(trips[j], dist_matrix)
                         print('Mejoro', sum(traveled_distances))
                         better = True
 
