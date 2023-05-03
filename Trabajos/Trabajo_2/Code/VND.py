@@ -37,11 +37,12 @@ def __initial_solution(solution, dist_matrix):
 
     return trips, traveled_distances
 
-def VND(solution, neighborhoods, dist_matrix, demands, max_capacity, preprocess=True, traveled_distances=None):
+def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_insertions=1000, num_relocations=1000, preprocess=True, traveled_distances=None):
+
     if preprocess:
-        trips, traveled_distances = __initial_solution(solution, dist_matrix)
+        trips, traveled_distances = __initial_solution(solution_VND, dist_matrix)
     else:
-        trips = solution
+        trips = solution_VND.copy()
 
     # print('################# Initial solution #################')
     # print(trips)
@@ -54,7 +55,7 @@ def VND(solution, neighborhoods, dist_matrix, demands, max_capacity, preprocess=
     while j < len(neighborhoods):
         new_trip, new_traveled_distances, better = neighborhoods[j](trips,
             traveled_distances, dist_matrix, demands = demands,
-            max_capacity=max_capacity, num_insertions=10000, num_relocations=1000000)
+            max_capacity=max_capacity, num_insertions=num_insertions, num_relocations=num_relocations)
         if better:
             j = 0
             trips = new_trip

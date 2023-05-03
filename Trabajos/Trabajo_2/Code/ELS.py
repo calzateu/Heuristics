@@ -55,11 +55,11 @@ def mutate_random(trips, traveled_distances, dist_matrix, **kwargs):
                 del(trips[j])
                 del(traveled_distances[j])
 
-            i, j = random.sample(range(len(trips)), 2)
 
-
-            if len(trips) < 1:
+            if len(trips) < 2:
                 return trips, traveled_distances
+
+            i, j = random.sample(range(len(trips)), 2)
 
         k = random.randint(1, len(trips[i])-2)
         l = random.randint(1, len(trips[j])-2)
@@ -104,7 +104,7 @@ def mutate_random(trips, traveled_distances, dist_matrix, **kwargs):
 def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_distance, ni, nc, generate_initial_solution=True, **kwargs):
 
     if generate_initial_solution:
-        random_generator = Noise2(problem_information, dist_matrix, demands, std=0.01, max_iterations=200)
+        random_generator = Noise2(problem_information, dist_matrix, demands, std=kwargs['std'], max_iterations=kwargs['max_iterations'])
         solution = utils.run_method(method=random_generator, verbose=False, graph=False)
         solution = split_information(solution)
         traveled_distances = []
@@ -114,17 +114,20 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
         solution = kwargs['solution']
         traveled_distances = kwargs['traveled_distances']
 
+    num_insertions=kwargs['num_insertions']
+    num_relocations=kwargs['num_relocations']
+
     for j in range(ni):
         f_ = float('inf')
         S_ = None
         traveled_distances_ = None
         for k in range(nc):
-            S = solution.copy()
+            S = [trip.copy() for trip in solution]
             traveled_distances_S = traveled_distances.copy()
             #S = mutate(S)
-            S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_relocations=10, demands=demands, max_capacity=max_capacity)
+            S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_relocations=1, demands=demands, max_capacity=max_capacity)
             neighborhoods = [two_opt, insertion, brute_force_relocation]
-            S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, preprocess=False, traveled_distances=traveled_distances_S)
+            S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
 
             #if sum(traveled_distances_S) < f_:
             if distance_exceed(traveled_distances_S, max_distance) < f_:

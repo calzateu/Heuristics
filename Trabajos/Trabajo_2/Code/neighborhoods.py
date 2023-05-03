@@ -209,7 +209,6 @@ def brute_force_relocation(trips, traveled_distances, dist_matrix, **kwargs):
                         #print('Mejoro', sum(traveled_distances))
                         better = True
 
-                        k -= 1
 
                     l += 1
                 k += 1
