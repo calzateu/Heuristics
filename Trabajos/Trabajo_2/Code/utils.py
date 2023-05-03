@@ -298,11 +298,12 @@ class Utils():
 
         return None
 
-def distance_exceed(traveled_distances, max_distance):
-        distance = 0
+def distance_exceed(traveled_distances, max_distance, num_cars):
         exceed = 0
-        for i in traveled_distances:
-            if i > max_distance:
-                exceed += i - max_distance
+        for i in range(len(traveled_distances)):
+            if i+1 > num_cars:
+                exceed += traveled_distances[i]
+            elif traveled_distances[i] > max_distance:
+                exceed += traveled_distances[i] - max_distance
 
         return exceed

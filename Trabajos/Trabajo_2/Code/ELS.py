@@ -38,7 +38,7 @@ def mutate_random(trips, traveled_distances, dist_matrix, **kwargs):
     demands = kwargs['demands']
     max_capacity = kwargs['max_capacity']
 
-    for _ in range(kwargs['num_relocations']):
+    for _ in range(kwargs['num_mutations']):
         # print('len(trips)', len(trips))
         if len(trips) < 2:
             return trips, traveled_distances
@@ -101,7 +101,7 @@ def mutate_random(trips, traveled_distances, dist_matrix, **kwargs):
     return trips, traveled_distances
 
 
-def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_distance, ni, nc, generate_initial_solution=True, **kwargs):
+def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_distance, num_cars, ni, nc, generate_initial_solution=True, **kwargs):
 
     if generate_initial_solution:
         random_generator = Noise2(problem_information, dist_matrix, demands, std=kwargs['std'], max_iterations=kwargs['max_iterations'])
@@ -116,6 +116,7 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
 
     num_insertions=kwargs['num_insertions']
     num_relocations=kwargs['num_relocations']
+    num_mutations=kwargs['num_mutations']
 
     for j in range(ni):
         f_ = float('inf')
@@ -125,18 +126,18 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
             S = [trip.copy() for trip in solution]
             traveled_distances_S = traveled_distances.copy()
             #S = mutate(S)
-            S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_relocations=1, demands=demands, max_capacity=max_capacity)
+            S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_mutations=num_mutations, demands=demands, max_capacity=max_capacity)
             neighborhoods = [two_opt, insertion, brute_force_relocation]
             S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
 
             #if sum(traveled_distances_S) < f_:
-            if distance_exceed(traveled_distances_S, max_distance) < f_:
-                f_ = distance_exceed(traveled_distances_S, max_distance)
+            if distance_exceed(traveled_distances_S, max_distance, num_cars) < f_:
+                f_ = distance_exceed(traveled_distances_S, max_distance, num_cars)
                 S_ = S
                 traveled_distances_ = traveled_distances_S
 
         #if f_ < sum(traveled_distances):
-        if f_ < distance_exceed(traveled_distances, max_distance):
+        if f_ < distance_exceed(traveled_distances, max_distance, num_cars):
             solution = S_
             traveled_distances = traveled_distances_
 
