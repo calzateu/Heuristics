@@ -1,4 +1,4 @@
-from neighborhoods import traveled_distance
+from neighborhoods import traveled_distance, distance_path
 
 
 def __split_path(path_information):
@@ -18,29 +18,29 @@ def __split_path(path_information):
 
     return sub_lists
 
-def __split_information(solution):
+def __split_information(solution, num_vehicles):
 
     trips = []
 
     for path_information in solution[:-1]:
-        trips.extend(__split_path(path_information))
+        trips.append(__split_path(path_information))
 
     return trips
 
-def __initial_solution(solution, dist_matrix):
-    trips = __split_information(solution)
+def __initial_solution(solution, dist_matrix, num_vehicles):
+    trips = __split_information(solution, num_vehicles)
 
     traveled_distances = []
 
-    for trip in trips:
-        traveled_distances.append(traveled_distance(trip, dist_matrix))
+    for i in range(num_vehicles):
+        traveled_distances.append(traveled_distance(trips[i], dist_matrix))
 
     return trips, traveled_distances
 
-def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_insertions=1000, num_relocations=1000, preprocess=True, traveled_distances=None):
+def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles, num_insertions=1000, num_relocations=1000, preprocess=True, traveled_distances=None):
 
     if preprocess:
-        trips, traveled_distances = __initial_solution(solution_VND, dist_matrix)
+        trips, traveled_distances = __initial_solution(solution_VND, dist_matrix, num_vehicles)
     else:
         trips = solution_VND.copy()
 
@@ -53,12 +53,12 @@ def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_ins
 
     j = 0
     while j < len(neighborhoods):
-        new_trip, new_traveled_distances, better = neighborhoods[j](trips,
+        new_trips, new_traveled_distances, better = neighborhoods[j](trips,
             traveled_distances, dist_matrix, demands = demands,
             max_capacity=max_capacity, num_insertions=num_insertions, num_relocations=num_relocations)
         if better:
             j = 0
-            trips = new_trip
+            trips = new_trips
             traveled_distances = new_traveled_distances
 
         else:

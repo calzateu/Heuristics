@@ -128,7 +128,7 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
             #S = mutate(S)
             S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_mutations=num_mutations, demands=demands, max_capacity=max_capacity)
             neighborhoods = [two_opt, insertion, brute_force_relocation]
-            S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
+            S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles=num_cars, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
 
             #if sum(traveled_distances_S) < f_:
             if distance_exceed(traveled_distances_S, max_distance, num_cars) < f_:

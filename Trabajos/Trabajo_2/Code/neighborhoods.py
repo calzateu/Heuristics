@@ -1,10 +1,16 @@
 import random
 
-
-def traveled_distance(path, dist_matrix):
+def distance_path(path, dist_matrix):
         distance = 0
         for i in range(len(path)-1):
             distance += dist_matrix[int(path[i]), int(path[i+1])]
+
+        return distance
+
+def traveled_distance(trips_vehicle, dist_matrix):
+        distance = 0
+        for trip in trips_vehicle:
+            distance += distance_path(trip, dist_matrix)
 
         return distance
 
@@ -22,7 +28,14 @@ def check_capacity(trip, demands, max_capacity):
 
     return 0
 
-def two_opt(trips, traveled_distances, dist_matrix, **kwargs):
+def check_capacity_vehicles(trips_vehicles, demands, max_capacity):
+    ocupation = 0
+    for trip in trips_vehicles:
+        ocupation += check_capacity(trip, demands, max_capacity)
+
+    return ocupation
+
+def two_opt(trips_vehicles, traveled_distances, dist_matrix, **kwargs):
 
     better = False
 
@@ -32,25 +45,28 @@ def two_opt(trips, traveled_distances, dist_matrix, **kwargs):
     #print('len(trips)', len(trips))
     #print('len(traveled_distances)', len(traveled_distances))
 
-    for i in range(len(trips)):
-        n = len(trips[i])
-        for j in range(1, n-1):
-            for k in range(j+1, n):
-                new_trip = trips[i][:j] + trips[i][j:k][::-1] + trips[i][k:]
-                new_traveled_distance = traveled_distance(new_trip, dist_matrix)
+    for i in range(len(trips_vehicles)):
+        for j in range(len(trips_vehicles[i])):
+            n = len(trips_vehicles[i][j])
+            for k in range(1, n-1):
+                for l in range(j+1, n):
+                    new_trip = trips_vehicles[i][j][:k] + trips_vehicles[i][j][k:l][::-1] + trips_vehicles[i][j][l:]
 
-                # Es válido si los dos suman cero. Sino,
-                # se excedió la capacidad y es igual a inf
-                capacity_new_trip = check_capacity(new_trip, demands, max_capacity)
+                    distance_before = traveled_distances[i] - traveled_distance(trips_vehicles[i][i], dist_matrix)
+                    new_traveled_distance = traveled_distance(new_trip, dist_matrix)
 
-
-                if new_traveled_distance + capacity_new_trip < traveled_distances[i]:
-                    trips[i] = new_trip
-                    traveled_distances[i] = new_traveled_distance
-                    better = True
+                    # Es válido si los dos suman cero. Sino,
+                    # se excedió la capacidad y es igual a inf
+                    capacity_new_trip = check_capacity_vehicles(new_trip, demands, max_capacity)
 
 
-    return trips, traveled_distances, better
+                    if new_traveled_distance + capacity_new_trip < traveled_distances[i]:
+                        trips_vehicles[i] = new_trip
+                        traveled_distances[i] = new_traveled_distance
+                        better = True
+
+
+    return trips_vehicles, traveled_distances, better
 
 # Define the insertion neighborhood structure
 def insertion(trips, traveled_distances, dist_matrix, **kwargs):
