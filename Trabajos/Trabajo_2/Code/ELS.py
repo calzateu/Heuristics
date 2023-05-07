@@ -42,7 +42,6 @@ def mutate_random(trips_vehicles, traveled_distances, dist_matrix, **kwargs):
     for _ in range(kwargs['num_mutations']):
         # print('len(trips)', len(trips))
         if len(trips_vehicles) < num_cars:
-            print('mutate inside 1',check_capacity_vehicles(trips_vehicles, demands=demands, max_capacity=max_capacity))
             return trips_vehicles, traveled_distances
         vehicle1 = random.randint(0, len(trips_vehicles) - 1)
         vehicle2 = random.randint(0, len(trips_vehicles) - 1)
@@ -117,7 +116,6 @@ def mutate_random(trips_vehicles, traveled_distances, dist_matrix, **kwargs):
 
 
 
-    print('mutate inside 2',check_capacity_vehicles(trips_vehicles, demands=demands, max_capacity=max_capacity))
     return trips_vehicles, traveled_distances
 
 
@@ -147,6 +145,7 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
             S = [[trip.copy() for trip in vehicle] for vehicle in solution]
             traveled_distances_S = traveled_distances.copy()
             #S = mutate(S)
+            S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_mutations=num_mutations, demands=demands, max_capacity=max_capacity, num_cars=num_cars)
             #neighborhoods = [two_opt, insertion, brute_force_relocation]
             S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles=num_cars, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
 

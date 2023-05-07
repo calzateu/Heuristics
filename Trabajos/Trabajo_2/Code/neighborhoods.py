@@ -185,6 +185,8 @@ def inter_trips_2opt(trips_vehicles, traveled_distance_trips, dist_matrix, **kwa
 
     demands = kwargs['demands']
     max_capacity = kwargs['max_capacity']
+    ruido = kwargs['max_capacity']
+
     better = False
     improved = True
     while improved:

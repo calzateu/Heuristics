@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # solution, traveled_distances = ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10, num_relocations=100, num_mutations=5, ni=5, nc=2, neighborhoods=neighborhoods, std=0.01, max_iterations=200)
     solution, traveled_distances = MS_ELS(utils, problem_information, dist_matrix,
         demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10,
-        num_relocations=100, num_mutations=5, ni=10, nc=10, nsol=10, neighborhoods=neighborhoods, std=0.01, max_iterations=200)
+        num_relocations=100, num_mutations=5, ni=10, nc=10, nsol=5, neighborhoods=neighborhoods, std=0.01, max_iterations=200, ruido=True)
 
     # utils.plot_routes(solution)
 
