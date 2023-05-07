@@ -27,7 +27,7 @@ if __name__ == '__main__':
     print(solutions[instance])
 
 
-    neighborhoods = [two_opt_trips, brute_force_relocation]# relocation]
+    neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]# relocation]
     #neighborhoods = [two_opt_vehicles]
 
     num_cars = int(problem_information[1])
@@ -43,10 +43,10 @@ if __name__ == '__main__':
 
     #utils.plot_routes(solution)
 
-    solution, traveled_distances = ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10, num_relocations=100, num_mutations=5, ni=5, nc=2, neighborhoods=neighborhoods, std=0.01, max_iterations=200)
-    # solution, traveled_distances = MS_ELS(utils, problem_information, dist_matrix,
-    #     demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10,
-    #     num_relocations=100, num_mutations=5, ni=10, nc=10, nsol=10, std=0.01, max_iterations=200)
+    # solution, traveled_distances = ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10, num_relocations=100, num_mutations=5, ni=5, nc=2, neighborhoods=neighborhoods, std=0.01, max_iterations=200)
+    solution, traveled_distances = MS_ELS(utils, problem_information, dist_matrix,
+        demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10,
+        num_relocations=100, num_mutations=5, ni=10, nc=10, nsol=10, neighborhoods=neighborhoods, std=0.01, max_iterations=200)
 
     # utils.plot_routes(solution)
 
@@ -59,6 +59,7 @@ if __name__ == '__main__':
 
 
     print(sorted(list(set(lista_1))))
+    print(len(sorted(list(set(lista_1)))))
 
     print(check_capacity_vehicles(solution, demands=demands, max_capacity=max_capacity))
 

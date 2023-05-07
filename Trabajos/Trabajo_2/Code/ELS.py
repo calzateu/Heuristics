@@ -69,7 +69,9 @@ def mutate_random(trips_vehicles, traveled_distances, dist_matrix, **kwargs):
             i = random.randint(0, len(trips_vehicles[vehicle1]) - 1)
             j = random.randint(0, len(trips_vehicles[vehicle2]) - 1)
 
+        # print(trips_vehicles[vehicle1][i])
         k = random.randint(1, len(trips_vehicles[vehicle1][i])-3)
+        # print(trips_vehicles[vehicle2][j])
         l = random.randint(1, len(trips_vehicles[vehicle2][j])-3)
 
         costumer = trips_vehicles[vehicle1][i].pop(k)
@@ -89,10 +91,10 @@ def mutate_random(trips_vehicles, traveled_distances, dist_matrix, **kwargs):
             restored_customer = trips_vehicles[vehicle2][j].pop(l)
             trips_vehicles[vehicle1][i].insert(k, restored_customer)
         else:
-            print()
-            print(valid)
-            print(check_capacity_vehicles(trips_vehicles, demands, max_capacity))
-            print()
+            # print()
+            # print(valid)
+            # print(check_capacity_vehicles(trips_vehicles, demands, max_capacity))
+            # print()
             traveled_distances[vehicle1] = traveled_distance(trips_vehicles[vehicle1], dist_matrix)
             traveled_distances[vehicle2] = traveled_distance(trips_vehicles[vehicle2], dist_matrix)
             # print('Mutacion', sum(traveled_distances))
@@ -145,12 +147,8 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
             S = [[trip.copy() for trip in vehicle] for vehicle in solution]
             traveled_distances_S = traveled_distances.copy()
             #S = mutate(S)
-            print('initial',check_capacity_vehicles(S, demands=demands, max_capacity=max_capacity))
-            S, traveled_distances_S = mutate_random(S, traveled_distances_S, dist_matrix, num_mutations=num_mutations, demands=demands, max_capacity=max_capacity, num_cars=num_cars)
-            print('mutate',check_capacity_vehicles(S, demands=demands, max_capacity=max_capacity))
             #neighborhoods = [two_opt, insertion, brute_force_relocation]
             S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles=num_cars, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
-            print('VND',check_capacity_vehicles(S, demands=demands, max_capacity=max_capacity))
 
             #if sum(traveled_distances_S) < f_:
             if distance_exceed(traveled_distances_S, max_distance, num_cars) < f_:
@@ -158,11 +156,9 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
                 S_ = S
                 traveled_distances_ = traveled_distances_S
 
-            print('final',check_capacity_vehicles(S, demands=demands, max_capacity=max_capacity))
 
         #if f_ < sum(traveled_distances):
         if f_ < distance_exceed(traveled_distances, max_distance, num_cars):
-            print('Cambió')
             solution = S_
             traveled_distances = traveled_distances_
 
