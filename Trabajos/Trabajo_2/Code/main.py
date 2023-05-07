@@ -23,9 +23,12 @@ if __name__ == '__main__':
     demands = nodes[:, 3].copy()
 
     #solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx')
-    solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_constructivo.xlsx')
+    solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_Noise.xlsx')
     print(solutions[instance])
-    neighborhoods = [two_opt]# relocation]
+
+
+    neighborhoods = [two_opt_trips, inter_trips_2opt]# relocation]
+    #neighborhoods = [two_opt_vehicles]
 
     num_cars = int(problem_information[1])
     max_capacity = problem_information[2]
