@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     folder_path = "../../mtVRP Instances"
     folder_path = os.path.abspath(folder_path)
-    instance = 'mtVRP1.txt'
+    instance = 'mtVRP2.txt'
     file_data = folder_path + '/' + instance
 
     problem_information, nodes, cont = utils.read_data(file_name=file_data)
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     print(solutions[instance])
 
 
-    neighborhoods = [two_opt_trips, inter_trips_2opt]# relocation]
+    neighborhoods = [two_opt_trips, inter_trips_2opt, brute_force_relocation]# relocation]
     #neighborhoods = [two_opt_vehicles]
 
     num_cars = int(problem_information[1])

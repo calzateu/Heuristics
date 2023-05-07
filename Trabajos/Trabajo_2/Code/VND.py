@@ -55,7 +55,7 @@ def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_veh
     while j < len(neighborhoods):
         new_trips, new_traveled_distances, better = neighborhoods[j](trips,
             traveled_distances, dist_matrix, demands = demands,
-            max_capacity=max_capacity, num_insertions=num_insertions, num_relocations=num_relocations)
+            max_capacity=max_capacity, num_vehicles=num_vehicles, num_insertions=num_insertions, num_relocations=num_relocations)
         if better:
             j = 0
             trips = new_trips
