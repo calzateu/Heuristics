@@ -4,7 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import openpyxl
 import os
+import re
 
+from VND import *
+from MS_ELS import MS_ELS
+from neighborhoods import check_capacity_vehicles
 
 class Utils():
     def __init__(self) -> None:
@@ -52,7 +56,7 @@ class Utils():
 
         return distance
 
-    def __validate_solutions(self, paths, method, verbose):
+    def __validate_solutions(self, paths, capacity_of_vehicles, max_distance):
         total_distances_traveled = 0
         feasible_path = 0
         nodes_visited = 0
@@ -61,36 +65,36 @@ class Utils():
             ocupation = 0
             for j in i:
                 if j == 0:
-                    if ocupation > method.capacity_of_vehicles:
-                        if verbose:
-                            print("Max capacity exceed", ocupation)
-                            print(i)
+                    if ocupation > capacity_of_vehicles:
+                        # if verbose:
+                        #     print("Max capacity exceed", ocupation)
+                        #     print(i)
                         break
                     ocupation = 0
                 else:
-                    ocupation += self.nodes[j, 3]
+                    ocupation += self.nodes[int(j), 3]
 
             distance = self.__traveled_distance(i)
 
             total_distances_traveled += distance
             nodes_visited += len(i)
 
-            if verbose and distance > method.max_distance:
-                        print("Max distance exceed", distance)
-                        print(i)
+            # if verbose and distance > method.max_distance:
+            #             print("Max distance exceed", distance)
+            #             print(i)
 
             i.append(distance)
 
-            if distance > method.max_distance:
+            if distance > max_distance:
                 i.append(1)
                 feasible_path = 1
             else:
                 i.append(0)
 
-        if verbose:
-            print(paths)
-            print("Total distance: ", total_distances_traveled)
-            print("Num nodes visited", nodes_visited)
+        # if verbose:
+        #     print(paths)
+        #     print("Total distance: ", total_distances_traveled)
+        #     print("Num nodes visited", nodes_visited)
 
         return total_distances_traveled, feasible_path
 
@@ -132,7 +136,28 @@ class Utils():
         # Save the workbook
         workbook.save(name)
 
+    def join_trips_vehicle(self, path_vehicle):
+        path = [0]
+        for trip in path_vehicle:
+            path.extend(trip[1:])
 
+        return path
+
+    def join_trips(self, solution):
+        paths = []
+        for vehicle in solution:
+            paths.append(self.join_trips_vehicle(vehicle))
+
+        return paths
+
+    def save_method(self, solution, total_time, capacity_of_vehicles, max_distance):
+        paths = self.join_trips(solution)
+        total_distances_traveled, feasible_path = self.__validate_solutions(paths=paths, capacity_of_vehicles=capacity_of_vehicles, max_distance=max_distance)
+
+        paths.append([total_distances_traveled, total_time, feasible_path])
+
+        return paths
+    
     def run_method(self, method, verbose=False, graph=False):
         start = time.time()
         paths = method.search_paths()
@@ -290,20 +315,100 @@ class Utils():
         return trips, traveled_distances
 
 
-    def apply_VND_all_instances(self, solutions):
+    def apply_VND_all_instances(self, solutions, neighborhoods, name):
 
-        for key in solutions.keys():
-            print(f'######### {key} #########')
-            self.VND(solutions[key])
+        folder_path = "../../mtVRP Instances"
+        folder_path = os.path.abspath(folder_path)
+        files = os.listdir(folder_path)
+        #files = sorted(files)
 
-        return None
+        files = sorted(files, key=lambda x: (int(re.findall('\d+', x)[0]), x))
 
-def distance_exceed(traveled_distances, max_distance, num_cars):
-        exceed = 0
-        for i in range(len(traveled_distances)):
-            if i+1 > num_cars:
-                exceed += traveled_distances[i]
-            elif traveled_distances[i] > max_distance:
-                exceed += traveled_distances[i] - max_distance
+        print(files)
 
-        return exceed
+        print(files)
+
+        instances = []
+
+        for file in files:
+            print(f'######### {file} #########')
+
+            problem_information, nodes, cont = self.read_data(folder_path + "/" + file)
+            dist_matrix = self.compute_distances()
+            demands = nodes[:, 3].copy()
+
+            num_vehicles = int(problem_information[1])
+            max_capacity = problem_information[2]
+            max_distance = problem_information[3]
+
+            start = time.time()
+            solution, traveled_distances = VND(solutions[file], neighborhoods, dist_matrix, demands, max_capacity=max_capacity, num_vehicles=num_vehicles)
+            end = time.time()
+            total_time = end - start
+
+            instances.append(
+                {'name': file,
+                 'nodes': self.save_method(solution, total_time, capacity_of_vehicles=max_capacity, max_distance=max_distance)
+                }
+            )
+
+        self.save_solution(instances=instances, name=name)
+
+
+    def apply_MS_ELS_all_instances(self, utils, problem_information, dist_matrix,
+                demands, max_capacity, max_distance, num_cars, num_insertions,
+                num_relocations, num_mutations, ni, nc, nsol, neighborhoods, std, max_iterations, ruido, name):
+
+        folder_path = "../../mtVRP Instances"
+        folder_path = os.path.abspath(folder_path)
+        files = os.listdir(folder_path)
+        #files = sorted(files)
+
+        files = sorted(files, key=lambda x: (int(re.findall('\d+', x)[0]), x))
+
+        print(files)
+
+        print(files)
+
+        instances = []
+
+        for file in files:
+            print(f'######### {file} #########')
+
+            problem_information, nodes, cont = utils.read_data(folder_path + "/" + file)
+            dist_matrix = self.compute_distances()
+            demands = nodes[:, 3].copy()
+
+            num_vehicles = int(problem_information[1])
+            max_capacity = problem_information[2]
+            max_distance = problem_information[3]
+
+            start = time.time()
+            #solution, traveled_distances = MS_ELS(solutions[file], neighborhoods, dist_matrix, demands, max_capacity=max_capacity, num_vehicles=num_vehicles)
+            solution, traveled_distances = MS_ELS(utils, problem_information, dist_matrix,
+                demands, max_capacity, max_distance, num_cars=num_vehicles, num_insertions=num_insertions,
+                num_relocations=num_relocations, num_mutations=num_mutations, ni=ni, nc=nc, nsol=nsol, neighborhoods=neighborhoods, std=std, max_iterations=max_iterations, ruido=ruido)
+
+            end = time.time()
+            total_time = end - start
+
+            print(check_capacity_vehicles(solution, demands=demands, max_capacity=max_capacity))
+
+            instances.append(
+                {'name': file,
+                 'nodes': self.save_method(solution, total_time, capacity_of_vehicles=max_capacity, max_distance=max_distance)
+                }
+            )
+
+        utils.save_solution(instances=instances, name=name)
+
+
+    def distance_exceed(self, traveled_distances, max_distance, num_cars):
+            exceed = 0
+            for i in range(len(traveled_distances)):
+                if i+1 > num_cars:
+                    exceed += traveled_distances[i]
+                elif traveled_distances[i] > max_distance:
+                    exceed += traveled_distances[i] - max_distance
+
+            return exceed

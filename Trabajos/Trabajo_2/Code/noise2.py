@@ -121,6 +121,11 @@ class Noise2():
             if paths[i][-1] != 0:
                 paths[i].append(0)
 
+        # for path in paths:
+        #     for trip in path:
+        #         while trip[-1] == 0 and trip[-2] == 0:
+        #             trip.pop()
+
         return paths
 
     def search_paths(self):
