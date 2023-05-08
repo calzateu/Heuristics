@@ -187,9 +187,16 @@ def inter_trips_2opt(trips_vehicles, traveled_distance_trips, dist_matrix, **kwa
     max_capacity = kwargs['max_capacity']
     ruido = kwargs['max_capacity']
 
+    aux = [[trip.copy() for trip in vehicle] for vehicle in trips_vehicles]
+    aux2 = traveled_distance_trips.copy()
+
     better = False
     improved = True
+    cont = 0
+    cont_improved = 0
     while improved:
+        if cont != cont_improved:
+            return aux, aux2, False
         better = False
         for vehicle1 in range(len(trips_vehicles)):
             for vehicle2 in range(vehicle1+1, len(trips_vehicles)):
@@ -259,9 +266,11 @@ def inter_trips_2opt(trips_vehicles, traveled_distance_trips, dist_matrix, **kwa
                                     if len(trips_vehicles[vehicle1][i]) <= 2:
                                         print(trips_vehicles[vehicle1][i])
                                         trips_vehicles[vehicle1].pop(i)
+                                        return trips_vehicles, traveled_distance_trips, True
                                     if len(trips_vehicles[vehicle2][j]) <= 2:
                                         print(trips_vehicles[vehicle2][j])
                                         trips_vehicles[vehicle2].pop(j)
+                                        return trips_vehicles, traveled_distance_trips, True
 
                                     traveled_distance_trips[vehicle1] = traveled_distance(trips_vehicles[vehicle1], dist_matrix)
                                     traveled_distance_trips[vehicle2] = traveled_distance(trips_vehicles[vehicle2], dist_matrix)
@@ -269,11 +278,13 @@ def inter_trips_2opt(trips_vehicles, traveled_distance_trips, dist_matrix, **kwa
 
                                     better = True
                                     improved = True
+                                    cont_improved += 1
 
                                 l += 1
                             k += 1
                         j += 1
                     i += 1
+        cont += 1
 
         # if check_capacity_vehicles(trips_vehicles, demands, max_capacity) == float('inf'):
         #     print(trips_vehicles)

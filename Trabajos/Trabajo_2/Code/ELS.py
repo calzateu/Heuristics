@@ -1,7 +1,6 @@
 
 from noise2 import Noise2
 from neighborhoods import traveled_distance, check_capacity
-from utils import Utils, distance_exceed
 from VND import *
 from neighborhoods import *
 
@@ -68,10 +67,18 @@ def mutate_random(trips_vehicles, traveled_distances, dist_matrix, **kwargs):
             i = random.randint(0, len(trips_vehicles[vehicle1]) - 1)
             j = random.randint(0, len(trips_vehicles[vehicle2]) - 1)
 
-        # print(trips_vehicles[vehicle1][i])
-        k = random.randint(1, len(trips_vehicles[vehicle1][i])-3)
+        if len(trips_vehicles[vehicle1][i]) < 4:
+            print('i',trips_vehicles[vehicle1][i])
+            k = 1
+        else:
+            k = random.randint(1, len(trips_vehicles[vehicle1][i])-3)
+
+        if len(trips_vehicles[vehicle2][j]) < 4:
+            print('j',trips_vehicles[vehicle2][j])
+            l = 1
+        else:
         # print(trips_vehicles[vehicle2][j])
-        l = random.randint(1, len(trips_vehicles[vehicle2][j])-3)
+            l = random.randint(1, len(trips_vehicles[vehicle2][j])-3)
 
         costumer = trips_vehicles[vehicle1][i].pop(k)
         trips_vehicles[vehicle2][j].insert(l, costumer)
@@ -150,14 +157,14 @@ def ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_dist
             S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles=num_cars, num_insertions=num_insertions, num_relocations=num_relocations, preprocess=False, traveled_distances=traveled_distances_S)
 
             #if sum(traveled_distances_S) < f_:
-            if distance_exceed(traveled_distances_S, max_distance, num_cars) < f_:
-                f_ = distance_exceed(traveled_distances_S, max_distance, num_cars)
+            if utils.distance_exceed(traveled_distances_S, max_distance, num_cars) < f_:
+                f_ = utils.distance_exceed(traveled_distances_S, max_distance, num_cars)
                 S_ = S
                 traveled_distances_ = traveled_distances_S
 
 
         #if f_ < sum(traveled_distances):
-        if f_ < distance_exceed(traveled_distances, max_distance, num_cars):
+        if f_ < utils.distance_exceed(traveled_distances, max_distance, num_cars):
             solution = S_
             traveled_distances = traveled_distances_
 
