@@ -1,7 +1,6 @@
 
 import numpy as np
 from collections import defaultdict
-import random
 
 class Noise2():
     def __init__(self, utils, **kwargs) -> None:
@@ -21,8 +20,9 @@ class Noise2():
         max_distance = max(distances)
 
         metrics = [0]*len(distances)
+        random_numbers = np.random.uniform(-self.std, self.std, size=len(distances))
         for i in range(len(distances)):
-            metrics[i] = distances[i]/max_distance - (self.utils.dist_matrix[i][0]/max_distance)*(capacity/self.utils.max_capacity) + random.uniform(-self.std, self.std)
+            metrics[i] = distances[i]/max_distance - (self.utils.dist_matrix[i][0]/max_distance)*(capacity/self.utils.max_capacity) + random_numbers[i]
 
         for i in range(len(demands)):
             if not visited_nodes[i] and capacity >= demands[i]:
@@ -65,10 +65,9 @@ class Noise2():
         cost = 0
         for path in solution:
             distance = self.__traveled_distance(path)
-            if distance > self.utils.max_distance:
-                cost += distance*10
-            else:
-                cost += distance
+
+        traveled_distances = self.utils.traveled_distances_vector(solution)
+        cost += self.utils.distance_exceed(traveled_distances)*10
 
         return cost
 

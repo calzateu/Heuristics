@@ -344,12 +344,20 @@ class Utils():
         self.save_solution(instances=instances, name=name)
 
 
-    def distance_exceed(self, traveled_distances, max_distance, num_cars):
+    def traveled_distances_vector(self, solution):
+        traveled_distances = []
+
+        for vehicle in solution:
+            traveled_distances.append(self.distance_path(vehicle))
+
+        return traveled_distances
+
+    def distance_exceed(self, traveled_distances):
             exceed = 0
             for i in range(len(traveled_distances)):
-                if i+1 > num_cars:
+                if i+1 > self.num_vehicles:
                     exceed += traveled_distances[i]
-                elif traveled_distances[i] > max_distance:
-                    exceed += traveled_distances[i] - max_distance
+                elif traveled_distances[i] > self.max_distance:
+                    exceed += traveled_distances[i] - self.max_distance
 
             return exceed
