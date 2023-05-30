@@ -22,19 +22,40 @@ if __name__ == '__main__':
     demands = nodes[:, 3].copy()
 
     solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_Noise.xlsx')
-    print(solutions[instance])
+    #print(solutions[instance])
 
 
     neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]# relocation]
+    utils.set_neighborhoods(neighborhoods)
 
     num_cars = int(problem_information[1])
     max_capacity = problem_information[2]
     max_distance = problem_information[3]
 
-    # solution, traveled_distances = VND(solutions[instance], neighborhoods, dist_matrix, demands=nodes[:, 3], max_capacity=max_capacity, num_vehicles=num_cars)
+    solution, traveled_distances = VND(solutions[instance], utils)
+
     name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
     #utils.apply_VND_all_instances(solutions, neighborhoods, name=name)
 
 
+    print(solution)
+    print(traveled_distances)
+    print(sum(traveled_distances))
+
+    print()
+    lista_1 = [item for vehicle in solution for trip in vehicle for item in trip]
+
+
+    print(sorted(list(set(lista_1))))
+    print(len(sorted(list(set(lista_1)))))
+
+    print(utils.check_capacity_vehicles(solution))
+
+
+    traveled_distances_temp = []
+    for vehicle in solution:
+        traveled_distances_temp.append(utils.traveled_distance(vehicle))
+
+    print(traveled_distances_temp)
 
 

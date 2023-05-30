@@ -1,46 +1,18 @@
-from neighborhoods import traveled_distance, distance_path
 
-
-def __split_path(path_information):
-    # Dividir la lista cada vez que aparezca el cero (deposito)
-    sub_lists = []
-    sub_list = []
-    for item in path_information['ruta']:
-        if item == 0:
-            if sub_list != []:
-                sub_lists.append([0] + sub_list + [0])
-            sub_list = []
-        else:
-            sub_list.append(item)
-
-    if sub_list != []:
-        sub_lists.append(sub_list)
-
-    return sub_lists
-
-def __split_information(solution, num_vehicles):
-
-    trips = []
-
-    for path_information in solution[:-1]:
-        trips.append(__split_path(path_information))
-
-    return trips
-
-def __initial_solution(solution, dist_matrix, num_vehicles):
-    trips = __split_information(solution, num_vehicles)
+def __initial_solution(solution, utils):
+    trips = utils.split_information(solution)
 
     traveled_distances = []
 
-    for i in range(num_vehicles):
-        traveled_distances.append(traveled_distance(trips[i], dist_matrix))
+    for i in range(utils.num_vehicles):
+        traveled_distances.append(utils.traveled_distance(trips[i]))
 
     return trips, traveled_distances
 
-def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles, num_insertions=1000, num_relocations=1000, preprocess=True, traveled_distances=None, ruido=False):
+def VND(solution_VND, utils, preprocess=True, traveled_distances=None):
 
     if preprocess:
-        trips, traveled_distances = __initial_solution(solution_VND, dist_matrix, num_vehicles)
+        trips, traveled_distances = __initial_solution(solution_VND, utils)
     else:
         trips = solution_VND.copy()
 
@@ -52,10 +24,9 @@ def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_veh
     #self.plot_routes(trips)
 
     j = 0
-    while j < len(neighborhoods):
-        new_trips, new_traveled_distances, better = neighborhoods[j](trips,
-            traveled_distances, dist_matrix, demands = demands,
-            max_capacity=max_capacity, num_vehicles=num_vehicles, num_insertions=num_insertions, num_relocations=num_relocations, ruido=ruido)
+    while j < len(utils.neighborhoods):
+        new_trips, new_traveled_distances, better = utils.neighborhoods[j](trips,
+            traveled_distances, utils)
         if better:
             j = 0
             trips = new_trips

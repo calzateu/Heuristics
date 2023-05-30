@@ -27,9 +27,10 @@ class Utils():
 
         self.problem_information = nodes[0]
         self.nodes  = nodes[1:cont]
+        self.demands = self.nodes[:, 3].copy()
         self.cont   = cont - 1
 
-        self.num_cars = int(self.problem_information[1])
+        self.num_vehicles = int(self.problem_information[1])
         self.max_capacity = self.problem_information[2]
         self.max_distance = self.problem_information[3]
 
@@ -54,12 +55,41 @@ class Utils():
 
         return dist_matrix
 
-    def __traveled_distance(self, path):
+    def distance_path(self, path):
         distance = 0
         for i in range(len(path)-1):
             distance += self.dist_matrix[int(path[i]), int(path[i+1])]
 
         return distance
+
+    def traveled_distance(self, trips_vehicle):
+        distance = 0
+        for trip in trips_vehicle:
+            distance += self.distance_path(trip)
+
+        return distance
+
+    def check_capacity(self, trip):
+        ocupation = 0
+
+        for j in trip:
+            if j == 0:
+                if ocupation > self.max_capacity:
+                    #print('ocupation exceed', ocupation)
+                    return float('inf')
+                ocupation = 0
+            else:
+                ocupation += self.demands[int(j)]
+
+        return 0
+
+    def check_capacity_vehicles(self, trips_vehicles):
+        ocupation = 0
+        for vehicle in trips_vehicles:
+            for trip in vehicle:
+                ocupation += self.check_capacity(trip)
+
+        return ocupation
 
     def __validate_solutions(self, paths, capacity_of_vehicles, max_distance):
         total_distances_traveled = 0
@@ -79,7 +109,7 @@ class Utils():
                 else:
                     ocupation += self.nodes[int(j), 3]
 
-            distance = self.__traveled_distance(i)
+            distance = self.distance_path(i)
 
             total_distances_traveled += distance
             nodes_visited += len(i)
@@ -259,7 +289,7 @@ class Utils():
         trips = []
 
         for path_information in solution[:-1]:
-            trips.extend(self.split_path(path_information))
+            trips.append(self.split_path(path_information))
 
         return trips
 
