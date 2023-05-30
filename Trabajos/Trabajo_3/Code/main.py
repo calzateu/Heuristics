@@ -17,20 +17,14 @@ if __name__ == '__main__':
     instance = 'mtVRP1.txt'
     file_data = folder_path + '/' + instance
 
-    problem_information, nodes, cont = utils.read_data(file_name=file_data)
-    dist_matrix = utils.compute_distances()
-    demands = nodes[:, 3].copy()
+    utils.read_data(file_name=file_data)
+    utils.compute_distances()
+    neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]# relocation]
+    utils.set_neighborhoods(neighborhoods)
 
     solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_Noise.xlsx')
     #print(solutions[instance])
 
-
-    neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]# relocation]
-    utils.set_neighborhoods(neighborhoods)
-
-    num_cars = int(problem_information[1])
-    max_capacity = problem_information[2]
-    max_distance = problem_information[3]
 
     solution, traveled_distances = VND(solutions[instance], utils)
 
