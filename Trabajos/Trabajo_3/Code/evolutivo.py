@@ -7,5 +7,11 @@ class AlgoritmoGeneticoHibrido:
         self.population = population
         self.utils = utils
 
+    def run(self):
+        pass
+
+    def population_initialization(self):
+        pass
+
 
 

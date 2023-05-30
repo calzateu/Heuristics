@@ -30,6 +30,7 @@ class Utils():
         self.demands = self.nodes[:, 3].copy()
         self.cont   = cont - 1
 
+        self.number_of_nodes = int(self.problem_information[0])
         self.num_vehicles = int(self.problem_information[1])
         self.max_capacity = self.problem_information[2]
         self.max_distance = self.problem_information[3]
@@ -267,29 +268,29 @@ class Utils():
         return instances_dict
 
 
-    def split_path(self, path_information):
+    def split_path(self, path):
         # Dividir la lista cada vez que aparezca el cero (deposito)
         sub_lists = []
         sub_list = []
-        for item in path_information['ruta']:
-            if item == 0:
+        for node in path:
+            if node == 0:
                 if sub_list != []:
                     sub_lists.append([0] + sub_list + [0])
                 sub_list = []
             else:
-                sub_list.append(item)
+                sub_list.append(node)
 
         if sub_list != []:
                     sub_lists.append(sub_list)
 
         return sub_lists
 
-    def split_information(self, solution):
+    def split_solution(self, solution):
 
         trips = []
 
-        for path_information in solution[:-1]:
-            trips.append(self.split_path(path_information))
+        for path in solution:
+            trips.append(self.split_path(path))
 
         return trips
 

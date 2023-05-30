@@ -5,6 +5,7 @@ import os
 # My modules
 from utils import Utils
 from neighborhoods import *
+from noise2 import Noise2
 from VND import *
 
 
@@ -22,19 +23,22 @@ if __name__ == '__main__':
     neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]# relocation]
     utils.set_neighborhoods(neighborhoods)
 
-    solutions = utils.read_solutions('../../Trabajo_1/Code/mtVRP_Cristian_Alzate_Urrea_Noise.xlsx')
-    #print(solutions[instance])
+    std = 0.01
+    max_iterations = 100
+    noise = Noise2(utils, std=std, max_iterations=max_iterations)
+    solution_noise = noise.search_paths(split=True)
 
 
-    solution, traveled_distances = VND(solutions[instance], utils)
+    solution, traveled_distances = VND(solution_noise, utils)
 
-    name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
+
+    #name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
     #utils.apply_VND_all_instances(solutions, neighborhoods, name=name)
 
 
     print(solution)
-    print(traveled_distances)
-    print(sum(traveled_distances))
+    #print(traveled_distances)
+    #print(sum(traveled_distances))
 
     print()
     lista_1 = [item for vehicle in solution for trip in vehicle for item in trip]

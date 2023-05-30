@@ -1,6 +1,6 @@
 
 def __initial_solution(solution, utils):
-    trips = utils.split_information(solution)
+    trips = utils.split_solution(solution)
 
     traveled_distances = []
 
