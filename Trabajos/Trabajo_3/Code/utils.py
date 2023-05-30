@@ -7,11 +7,13 @@ import os
 import re
 
 from VND import *
-from neighborhoods import check_capacity_vehicles
 
 class Utils():
     def __init__(self) -> None:
         self.__MAX_NUM_NODOS  = 201
+
+    def set_neighborhoods(self, neighborhoods):
+        self.neighborhoods = neighborhoods
 
     def read_data(self, file_name):
         nodes       = np.zeros((self.__MAX_NUM_NODOS , 4))
@@ -26,6 +28,10 @@ class Utils():
         self.problem_information = nodes[0]
         self.nodes  = nodes[1:cont]
         self.cont   = cont - 1
+
+        self.num_cars = int(self.problem_information[1])
+        self.max_capacity = self.problem_information[2]
+        self.max_distance = self.problem_information[3]
 
         return self.problem_information, self.nodes, self.cont
 
@@ -156,7 +162,7 @@ class Utils():
         paths.append([total_distances_traveled, total_time, feasible_path])
 
         return paths
-    
+
     def run_method(self, method, verbose=False, graph=False):
         start = time.time()
         paths = method.search_paths()
@@ -199,19 +205,6 @@ class Utils():
 
 
     def read_solutions(self, path_to_file):
-        # solution = []
-
-        # cont = 0
-        # with open(path_to_file, 'r') as file:
-        #     for line in file:
-        #         line = list(map(int, line.split()))
-        #         solution.append(line)
-
-        #         cont += 1
-
-        # return solution, cont
-
-
         # Leer el archivo de Excel
         excel_file = openpyxl.load_workbook(path_to_file)
 
@@ -244,7 +237,7 @@ class Utils():
         return instances_dict
 
 
-    def __split_path(self, path_information):
+    def split_path(self, path_information):
         # Dividir la lista cada vez que aparezca el cero (deposito)
         sub_lists = []
         sub_list = []
@@ -261,17 +254,17 @@ class Utils():
 
         return sub_lists
 
-    def __split_information(self, solution):
+    def split_information(self, solution):
 
         trips = []
 
         for path_information in solution[:-1]:
-            trips.extend(self.__split_path(path_information))
+            trips.extend(self.split_path(path_information))
 
         return trips
 
-    def __initial_solution(self, solution):
-        trips = self.__split_information(solution)
+    def initial_solution(self, solution):
+        trips = self.split_information(solution)
 
         traveled_distances = []
 
@@ -279,40 +272,6 @@ class Utils():
             traveled_distances.append(self.__traveled_distance(trip))
 
         return trips, traveled_distances
-
-    def VND(self, solution, neighborhoods, dist_matrix, demands, max_capacity):
-        trips, traveled_distances = self.__initial_solution(solution)
-
-        print('################# Initial solution #################')
-        print(trips)
-        print(traveled_distances)
-        print(sum(traveled_distances))
-
-        self.plot_routes(trips)
-
-        j = 0
-        while j < len(neighborhoods):
-            new_trip, new_traveled_distances, better = neighborhoods[j](trips,
-                traveled_distances, dist_matrix, demands = demands,
-                max_capacity=max_capacity, num_insertions=10000, num_relocations=1000000)
-            if better:
-                j = 0
-                trips = new_trip
-                traveled_distances = new_traveled_distances
-
-            else:
-                j = j+1
-
-        print()
-        print('################# Final solution #################')
-        print(trips)
-        print(traveled_distances)
-        print(sum(traveled_distances))
-
-        self.plot_routes(trips)
-
-        return trips, traveled_distances
-
 
     def apply_VND_all_instances(self, solutions, neighborhoods, name):
 
