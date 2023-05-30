@@ -38,7 +38,7 @@ if __name__ == '__main__':
     #utils.apply_VND_all_instances(solutions, neighborhoods, name=name)
     utils.apply_MS_ELS_all_instances(utils, problem_information, dist_matrix,
                 demands, max_capacity, max_distance, num_cars=num_cars, num_insertions=10,
-                num_relocations=100, num_mutations=5, ni=5, nc=3, nsol=5, neighborhoods=neighborhoods, std=0.01, max_iterations=200, ruido=True, name=name)
+                num_relocations=100, num_mutations=5, ni=4, nc=3, nsol=8, neighborhoods=neighborhoods, std=0.05, max_iterations=200, ruido=True, name=name)
 
     # print(solution)
     # print(traveled_distances)
