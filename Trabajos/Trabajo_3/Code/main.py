@@ -48,7 +48,7 @@ if __name__ == '__main__':
     num_generations = 30
     probability_mutation = 0.5
     start = time.time()
-    apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method=noise, name=name, probability_mutation=probability_mutation)
+    apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method=noise, name=name, probability_mutation=probability_mutation, std=std)
     end = time.time()
 
     print('Elapsed time:', end-start)
