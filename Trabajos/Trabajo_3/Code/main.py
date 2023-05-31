@@ -28,10 +28,10 @@ if __name__ == '__main__':
     std = 0.01
     max_iterations = 20
     noise = Noise2(utils, std=std, max_iterations=max_iterations)
-    solution_noise = noise.search_paths(split=True)
+    #solution_noise = noise.search_paths(split=True)
 
 
-    solution, traveled_distances = VND(solution_noise, utils)
+    #solution, traveled_distances = VND(solution_noise, utils)
 
     #name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
     #utils.apply_VND_all_instances(solutions, neighborhoods, name=name)
@@ -42,34 +42,32 @@ if __name__ == '__main__':
     num_generations = 20
     start = time.time()
     evolutivo = AlgoritmoGeneticoHibrido(size_population, num_generations, utils, generation_method=noise)
-    evolutivo.run()
+    solution, traveled_distances = evolutivo.run()
     end = time.time()
 
     print('Elapsed time:', end-start)
 
-    # #solution, traveled_distances =
 
 
 
+    print(solution)
+    print(traveled_distances)
+    print(sum(traveled_distances))
 
-    # print(solution)
-    # print(traveled_distances)
-    # print(sum(traveled_distances))
-
-    # print()
-    # lista_1 = [item for vehicle in solution for trip in vehicle for item in trip]
-
-
-    # print(sorted(list(set(lista_1))))
-    # print(len(sorted(list(set(lista_1)))))
-
-    # print(utils.check_capacity_vehicles(solution))
+    print()
+    lista_1 = [item for vehicle in solution for trip in vehicle for item in trip]
 
 
-    # traveled_distances_temp = []
-    # for vehicle in solution:
-    #     traveled_distances_temp.append(utils.traveled_distance(vehicle))
+    print(sorted(list(set(lista_1))))
+    print(len(sorted(list(set(lista_1)))))
 
-    # print(traveled_distances_temp)
+    print(utils.check_capacity_vehicles(solution))
+
+
+    traveled_distances_temp = []
+    for vehicle in solution:
+        traveled_distances_temp.append(utils.traveled_distance(vehicle))
+
+    print(traveled_distances_temp)
 
 

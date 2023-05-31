@@ -99,10 +99,27 @@ class AlgoritmoGeneticoHibrido:
         self.population[parent1_index], self.traveled_distances_population[parent1_index] = VND(self.population[parent1_index], self.utils, preprocess=False, traveled_distances=self.traveled_distances_population[parent1_index])
         self.population[parent2_index], self.traveled_distances_population[parent2_index] = VND(self.population[parent2_index], self.utils, preprocess=False, traveled_distances=self.traveled_distances_population[parent2_index])
 
-    def update_population(seld):
-        pass
+    def update_base_population(self, return_better=False):
+        costs = dict()
+
+        for i in range(self.active_population):
+            cost = self.utils.compute_cost(self.population[i], self.traveled_distances_population[i])
+            costs[cost] = i
+
+        costs_sorted = sorted(list(costs.keys()))
+
+        if return_better:
+            return self.population[costs[costs_sorted[i]]], self.traveled_distances_population[costs[costs_sorted[i]]]
+
+        for i in range(self.size_population):
+            self.population[i] = self.population[costs[costs_sorted[i]]]
+            self.traveled_distances_population[i] = self.traveled_distances_population[costs[costs_sorted[i]]]
+
 
     def run(self):
+        better_solution = None
+        better_traveled_distance = None
+
         self.population_initialization()
 
         for i in range(self.num_generations):
@@ -115,10 +132,14 @@ class AlgoritmoGeneticoHibrido:
                     self.mutation(parent1_index, parent2_index)
 
 
-            self.update_population()
+            if i == self.num_generations - 1:
+                better_solution, better_traveled_distance = self.update_base_population(return_better=True)
+            else:
+                self.update_base_population()
 
             self.active_population = self.size_population
 
-        #print(self.population)
+
+        return better_solution, better_traveled_distance
 
 

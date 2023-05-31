@@ -64,7 +64,7 @@ class Noise2():
     def compute_cost(self, solution):
         cost = 0
         for path in solution:
-            distance = self.__traveled_distance(path)
+            cost += self.__traveled_distance(path)
 
         traveled_distances = self.utils.traveled_distances_vector(solution)
         cost += self.utils.distance_exceed(traveled_distances)*10

@@ -374,6 +374,14 @@ class Utils():
             return exceed
 
 
+    def compute_cost(self, solution, traveled_distances):
+        cost = sum(self.traveled_distances_solution_splitted(solution))
+
+        cost += self.distance_exceed(traveled_distances)*10
+
+        cost += self.check_capacity_vehicles(solution)
+
+        return cost
 
 
     def search_node(self, node, solution):
