@@ -21,7 +21,8 @@ if __name__ == '__main__':
 
     utils.read_data(file_name=file_data)
     utils.compute_distances()
-    neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]# relocation]
+    #neighborhoods = [inter_trips_2opt, two_opt_trips, brute_force_relocation]
+    neighborhoods = [inter_trips_2opt, two_opt_trips]
     utils.set_neighborhoods(neighborhoods)
 
     std = 0.01
@@ -37,8 +38,8 @@ if __name__ == '__main__':
 
 
 
-    size_population = 50
-    num_generations = 60
+    size_population = 20
+    num_generations = 20
     start = time.time()
     evolutivo = AlgoritmoGeneticoHibrido(size_population, num_generations, utils, generation_method=noise)
     evolutivo.run()
