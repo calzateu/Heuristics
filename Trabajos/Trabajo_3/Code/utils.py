@@ -186,9 +186,9 @@ class Utils():
 
         return paths
 
-    def save_method(self, solution, total_time, capacity_of_vehicles, max_distance):
+    def save_method(self, solution, total_time):
         paths = self.join_trips(solution)
-        total_distances_traveled, feasible_path = self.__validate_solutions(paths=paths, capacity_of_vehicles=capacity_of_vehicles, max_distance=max_distance)
+        total_distances_traveled, feasible_path = self.__validate_solutions(paths=paths, capacity_of_vehicles=self.max_capacity, max_distance=self.max_distance)
 
         paths.append([total_distances_traveled, total_time, feasible_path])
 

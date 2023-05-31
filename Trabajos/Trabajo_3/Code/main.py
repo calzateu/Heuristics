@@ -7,7 +7,7 @@ from utils import Utils
 from neighborhoods import *
 from noise2 import Noise2
 from VND import *
-from evolutivo import AlgoritmoGeneticoHibrido
+from evolutivo import AlgoritmoGeneticoHibrido, apply_evolutivo_all_instances
 
 
 if __name__ == '__main__':
@@ -31,43 +31,48 @@ if __name__ == '__main__':
     #solution_noise = noise.search_paths(split=True)
 
 
-    #solution, traveled_distances = VND(solution_noise, utils)
+    # size_population = 20
+    # num_generations = 30
+    # probability_mutation = 0.5
+    # start = time.time()
+    # evolutivo = AlgoritmoGeneticoHibrido(size_population, num_generations, utils, generation_method=noise)
+    # solution, traveled_distances = evolutivo.run(probability_mutation)
+    # end = time.time()
 
-    #name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
-    #utils.apply_VND_all_instances(solutions, neighborhoods, name=name)
+    # print('Elapsed time:', end-start)
 
 
+    name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
 
     size_population = 20
     num_generations = 30
+    probability_mutation = 0.5
     start = time.time()
-    evolutivo = AlgoritmoGeneticoHibrido(size_population, num_generations, utils, generation_method=noise)
-    solution, traveled_distances = evolutivo.run()
+    apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method=noise, name=name, probability_mutation=probability_mutation)
     end = time.time()
 
     print('Elapsed time:', end-start)
 
 
 
+    # print(solution)
+    # print(traveled_distances)
+    # print(sum(traveled_distances))
 
-    print(solution)
-    print(traveled_distances)
-    print(sum(traveled_distances))
-
-    print()
-    lista_1 = [item for vehicle in solution for trip in vehicle for item in trip]
-
-
-    print(sorted(list(set(lista_1))))
-    print(len(sorted(list(set(lista_1)))))
-
-    print(utils.check_capacity_vehicles(solution))
+    # print()
+    # lista_1 = [item for vehicle in solution for trip in vehicle for item in trip]
 
 
-    traveled_distances_temp = []
-    for vehicle in solution:
-        traveled_distances_temp.append(utils.traveled_distance(vehicle))
+    # print(sorted(list(set(lista_1))))
+    # print(len(sorted(list(set(lista_1)))))
 
-    print(traveled_distances_temp)
+    # print(utils.check_capacity_vehicles(solution))
+
+
+    # traveled_distances_temp = []
+    # for vehicle in solution:
+    #     traveled_distances_temp.append(utils.traveled_distance(vehicle))
+
+    # print(traveled_distances_temp)
 
 

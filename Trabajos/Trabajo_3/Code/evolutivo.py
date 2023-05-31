@@ -1,6 +1,9 @@
 
 import numpy as np
 from VND import *
+import os
+import re
+import time
 
 
 class AlgoritmoGeneticoHibrido:
@@ -117,7 +120,7 @@ class AlgoritmoGeneticoHibrido:
             self.traveled_distances_population[i] = self.traveled_distances_population[costs[costs_sorted[i]]]
 
 
-    def run(self):
+    def run(self, probability_mutation):
         better_solution = None
         better_traveled_distance = None
 
@@ -130,7 +133,7 @@ class AlgoritmoGeneticoHibrido:
 
                 self.crossover(self.population[parent1_index], self.population[parent2_index])
 
-                if np.random.random() < 0.5:
+                if np.random.random() < probability_mutation:
                     self.mutation(parent1_index, parent2_index)
 
 
@@ -144,4 +147,40 @@ class AlgoritmoGeneticoHibrido:
 
         return better_solution, better_traveled_distance
 
+
+def apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method, name, probability_mutation):
+
+        folder_path = "../../mtVRP Instances"
+        folder_path = os.path.abspath(folder_path)
+        files = os.listdir(folder_path)
+        #files = sorted(files)
+
+        files = sorted(files, key=lambda x: (int(re.findall('\d+', x)[0]), x))
+
+        print(files)
+
+        instances = []
+
+        for file in files:
+            print(f'######### {file} #########')
+
+            utils.read_data(folder_path + "/" + file)
+            utils.compute_distances()
+
+            start = time.time()
+            evolutivo = AlgoritmoGeneticoHibrido(size_population, num_generations, utils, generation_method)
+            solution, traveled_distances = evolutivo.run(probability_mutation)
+            #solution, traveled_distances = VND(solutions[file], neighborhoods, dist_matrix, demands, max_capacity=max_capacity, num_vehicles=num_vehicles)
+            end = time.time()
+            total_time = end - start
+
+            instances.append(
+                {'name': file,
+                 'nodes': utils.save_method(solution, total_time)
+                }
+            )
+
+        name_saving = name + "_pop_" + str(size_population) + "_gen_" + str(num_generations) + "_prob_" + str(probability_mutation)
+
+        utils.save_solution(instances=instances, name=name_saving)
 
