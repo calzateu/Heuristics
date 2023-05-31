@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     folder_path = "../../mtVRP Instances"
     folder_path = os.path.abspath(folder_path)
-    instance = 'mtVRP1.txt'
+    instance = 'mtVRP7.txt'
     file_data = folder_path + '/' + instance
 
     utils.read_data(file_name=file_data)
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
 
     size_population = 20
-    num_generations = 20
+    num_generations = 30
     start = time.time()
     evolutivo = AlgoritmoGeneticoHibrido(size_population, num_generations, utils, generation_method=noise)
     solution, traveled_distances = evolutivo.run()

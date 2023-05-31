@@ -52,20 +52,21 @@ class AlgoritmoGeneticoHibrido:
                  index_vehicle1, index_trip1, index_node1, index_vehicle2, index_trip2, index_node2):
         status = 0
         if index1[0] < len(parent1_child):
-            if index1[1] < len(parent1_child[index_vehicle1]):
-                if index1[2] < len(parent1_child[index_vehicle1][index_trip1]):
+            if index1[1] < len(parent1_child[index1[0]]):
+                if index1[2] < len(parent1_child[index1[0]][index1[1]]):
                     if index_vehicle1 < len(parent1_child):
-                        if index_trip1 < len(parent1_child[index1[0]]):
-                            if index_node1 < len(parent1_child[index1[0]][index1[1]]):
+                        if index_trip1 < len(parent1_child[index_vehicle1]):
+                            if index_node1 < len(parent1_child[index_vehicle1][index_trip1]):
                                 parent1_child[index_vehicle1][index_trip1][index_node1], parent1_child[index1[0]][index1[1]][index1[2]] = parent1_child[index1[0]][index1[1]][index1[2]], parent1_child[index_vehicle1][index_trip1][index_node1]
                                 status += 1
 
         if index2[0] < len(parent2_child):
-            if index2[1] < len(parent2_child[index_vehicle2]):
-                if index2[2] < len(parent2_child[index_vehicle2][index_trip2]):
+            if index2[1] < len(parent2_child[index2[0]]):
+                print(index2[1], parent2_child[index2[0]])
+                if index2[2] < len(parent2_child[index2[0]][index2[1]]):
                     if index_vehicle2 < len(parent2_child):
-                        if index_trip2 < len(parent2_child[index2[0]]):
-                            if index_node2 < len(parent2_child[index2[0]][index2[1]]):
+                        if index_trip2 < len(parent2_child[index_vehicle2]):
+                            if index_node2 < len(parent2_child[index_vehicle2][index_trip2]):
                                 parent2_child[index_vehicle2][index_trip2][index_node2], parent2_child[index2[0]][index2[1]][index2[2]] = parent2_child[index2[0]][index2[1]][index2[2]], parent2_child[index_vehicle2][index_trip2][index_node2]
                                 status += 1
 
@@ -104,7 +105,7 @@ class AlgoritmoGeneticoHibrido:
 
         for i in range(self.active_population):
             cost = self.utils.compute_cost(self.population[i], self.traveled_distances_population[i])
-            costs[cost] = i
+            costs[(cost, i)] = i
 
         costs_sorted = sorted(list(costs.keys()))
 
@@ -123,12 +124,13 @@ class AlgoritmoGeneticoHibrido:
         self.population_initialization()
 
         for i in range(self.num_generations):
+            print(i)
             for j in range(int(self.size_population/2)): # Num childrens
                 parent1_index, parent2_index = self.select_parents()
 
                 self.crossover(self.population[parent1_index], self.population[parent2_index])
 
-                if np.random.random() < 0.2:
+                if np.random.random() < 0.5:
                     self.mutation(parent1_index, parent2_index)
 
 

@@ -391,4 +391,4 @@ class Utils():
                     if node == solution[vehicle][trip]:
                         return (vehicle, node, trip)
 
-        return [-1, -1, -1]
+        return [float('inf'), float('inf'), float('inf')]
