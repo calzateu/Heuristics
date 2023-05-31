@@ -148,7 +148,7 @@ class AlgoritmoGeneticoHibrido:
         return better_solution, better_traveled_distance
 
 
-def apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method, name, probability_mutation, std):
+def apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method, name, probability_mutation):
 
         folder_path = "../../mtVRP Instances"
         folder_path = os.path.abspath(folder_path)
@@ -180,7 +180,6 @@ def apply_evolutivo_all_instances(size_population, num_generations, utils, gener
                 }
             )
 
-        name_saving = name + "_pop_" + str(size_population) + "_gen_" + str(num_generations) + "_prob_" + str(probability_mutation) + "_std_" + str(std)
 
-        utils.save_solution(instances=instances, name=name_saving)
+        utils.save_solution(instances=instances, name=name)
 

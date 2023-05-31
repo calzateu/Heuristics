@@ -25,7 +25,7 @@ if __name__ == '__main__':
     neighborhoods = [inter_trips_2opt, two_opt_trips]
     utils.set_neighborhoods(neighborhoods)
 
-    std = 0.01
+    std = 0.1
     max_iterations = 20
     noise = Noise2(utils, std=std, max_iterations=max_iterations)
     #solution_noise = noise.search_paths(split=True)
@@ -42,13 +42,15 @@ if __name__ == '__main__':
     # print('Elapsed time:', end-start)
 
 
-    name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
-
     size_population = 20
-    num_generations = 30
+    num_generations = 20
     probability_mutation = 0.5
+
+    name = "mtVRP_Cristian_Alzate_Urrea_sancocho"
+    name_saving = name + "_pop_" + str(size_population) + "_gen_" + str(num_generations) + "_prob_" + str(probability_mutation) + "_std_" + str(std) + ".xlsx"
+
     start = time.time()
-    apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method=noise, name=name, probability_mutation=probability_mutation, std=std)
+    apply_evolutivo_all_instances(size_population, num_generations, utils, generation_method=noise, name=name, probability_mutation=probability_mutation)
     end = time.time()
 
     print('Elapsed time:', end-start)
