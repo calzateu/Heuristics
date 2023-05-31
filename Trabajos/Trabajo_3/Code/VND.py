@@ -1,18 +1,8 @@
 
-def __initial_solution(solution, utils):
-    trips = utils.split_solution(solution)
-
-    traveled_distances = []
-
-    for i in range(utils.num_vehicles):
-        traveled_distances.append(utils.traveled_distance(trips[i]))
-
-    return trips, traveled_distances
-
 def VND(solution_VND, utils, preprocess=True, traveled_distances=None):
 
     if preprocess:
-        trips, traveled_distances = __initial_solution(solution_VND, utils)
+        trips, traveled_distances = utils.initial_solution(solution_VND)
     else:
         trips = solution_VND.copy()
 

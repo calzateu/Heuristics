@@ -27,10 +27,10 @@ if __name__ == '__main__':
     std = 0.01
     max_iterations = 20
     noise = Noise2(utils, std=std, max_iterations=max_iterations)
-    #solution_noise = noise.search_paths(split=True)
+    solution_noise = noise.search_paths(split=True)
 
 
-    #solution, traveled_distances = VND(solution_noise, utils)
+    solution, traveled_distances = VND(solution_noise, utils)
 
     #name = "mtVRP_Cristian_Alzate_Urrea_sancocho.xlsx"
     #utils.apply_VND_all_instances(solutions, neighborhoods, name=name)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     print('Elapsed time:', end-start)
 
-    #solution, traveled_distances =
+    # #solution, traveled_distances =
 
 
 

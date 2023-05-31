@@ -295,12 +295,12 @@ class Utils():
         return trips
 
     def initial_solution(self, solution):
-        trips = self.split_information(solution)
+        trips = self.split_solution(solution)
 
         traveled_distances = []
 
-        for trip in trips:
-            traveled_distances.append(self.__traveled_distance(trip))
+        for i in range(self.num_vehicles):
+            traveled_distances.append(self.traveled_distance(trips[i]))
 
         return trips, traveled_distances
 
@@ -352,6 +352,17 @@ class Utils():
 
         return traveled_distances
 
+    def traveled_distances_solution_splitted(self, solution):
+        traveled_distances = []
+
+        for vehicle in solution:
+            distance_vechicle = 0
+            for trip in vehicle:
+                distance_vechicle += self.distance_path(trip)
+            traveled_distances.append(distance_vechicle)
+
+        return traveled_distances
+
     def distance_exceed(self, traveled_distances):
             exceed = 0
             for i in range(len(traveled_distances)):
@@ -361,3 +372,15 @@ class Utils():
                     exceed += traveled_distances[i] - self.max_distance
 
             return exceed
+
+
+
+
+    def search_node(self, node, solution):
+        for vehicle in range(len(solution)):
+            for trip in range(len(solution[vehicle])):
+                for node in range(len(solution[vehicle][trip])):
+                    if node == solution[vehicle][trip]:
+                        return (vehicle, node, trip)
+
+        return [-1, -1, -1]
