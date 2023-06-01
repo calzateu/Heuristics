@@ -14,6 +14,16 @@ def traveled_distance(trips_vehicle, dist_matrix):
 
         return distance
 
+def distance_exceed(traveled_distances, max_distance, num_cars):
+    exceed = 0
+    for i in range(len(traveled_distances)):
+        if i+1 > num_cars:
+            exceed += traveled_distances[i]
+        elif traveled_distances[i] > max_distance:
+            exceed += traveled_distances[i] - max_distance
+
+    return exceed
+
 
 def check_capacity(trip, demands, max_capacity):
     ocupation = 0
@@ -292,6 +302,113 @@ def inter_trips_2opt(trips_vehicles, traveled_distance_trips, dist_matrix, **kwa
     return trips_vehicles, traveled_distance_trips, better
 
 
+def inter_trips_2opt_corrected(trips_vehicles, traveled_distance_trips, dist_matrix, **kwargs):
+
+    demands = kwargs['demands']
+    max_capacity = kwargs['max_capacity']
+    ruido = kwargs['max_capacity']
+
+    aux = [[trip.copy() for trip in vehicle] for vehicle in trips_vehicles]
+    aux2 = traveled_distance_trips.copy()
+
+    better = False
+    improved = True
+    cont = 0
+    cont_improved = 0
+    for vehicle1 in range(len(trips_vehicles)):
+        for vehicle2 in range(vehicle1+1, len(trips_vehicles)):
+            i = 0
+            while i < len(trips_vehicles[vehicle1]):
+                j = 0
+                while j < len(trips_vehicles[vehicle2]):
+                    k = 1
+                    while k < len(trips_vehicles[vehicle1][i]):
+                        l = 1
+                        while l < len(trips_vehicles[vehicle2][j]):
+                            temp1 = trips_vehicles[vehicle1][i].copy()
+                            temp2 = trips_vehicles[vehicle2][j].copy()
+                            # trips_vehicles[vehicle1][i] = trips_vehicles[vehicle1][i][1:k] + trips_vehicles[vehicle2][j][l:-1]
+                            # trips_vehicles[vehicle2][j] = trips_vehicles[vehicle2][j][1:l] + trips_vehicles[vehicle1][i][k:-1]
+
+                            new_trip_i = trips_vehicles[vehicle1][i][:k].copy() + trips_vehicles[vehicle2][j][l:].copy()
+                            new_trip_j = trips_vehicles[vehicle2][j][:l].copy() + trips_vehicles[vehicle1][i][k:].copy()
+                            # lista_1 = [item for trip in [temp1, temp2] for item in trip]
+                            # lista_2 = [item for trip in [new_trip_i, new_trip_j] for item in trip]
+                            # print(len(list(set(lista_1))) == len(list(set(lista_2))))
+                            # print('Vehiculos',len(sorted(list(set(lista_1)))))
+
+                            # if k == len(trips_vehicles[vehicle2][j]) - 1:
+                            #     print(vehicle1, vehicle2)
+                            #     print(temp1)
+                            #     print(temp2)
+                            #     print()
+                            #     print(new_trip_i)
+                            #     print(new_trip_j)
+                            #     exit()
+
+                            if len( trips_vehicles[vehicle1][i]) < 2:
+                                print(' trips_vehicles[vehicle1][i]', trips_vehicles[vehicle1][i])
+                            if len( trips_vehicles[vehicle2][j]) < 2:
+                                print(' trips_vehicles[vehicle2][j]', trips_vehicles[vehicle2][j])
+
+                            distance_before_i = distance_path(temp1, dist_matrix)
+                            distance_before_j = distance_path(temp2, dist_matrix)
+                            distances_before = distance_before_i + distance_before_j
+
+                            new_traveled_distance_trip_i = distance_path(new_trip_i, dist_matrix)
+                            new_traveled_distance_trip_j = distance_path(new_trip_j, dist_matrix)
+                            new_traveled_distance = new_traveled_distance_trip_i + new_traveled_distance_trip_j
+
+                            # # Es válido si los dos suman cero. Sino,
+                            # # se excedió la capacidad y es igual a inf
+                            # capacity_new_trip_i = check_capacity(new_trip_j, demands, max_capacity)
+                            # capacity_new_trip_j = check_capacity(new_trip_j, demands, max_capacity)
+                            # valid = capacity_new_trip_i + capacity_new_trip_j # Es válido si los dos suman cero. Sino,
+                            #                                 # se excedió la capacidad y es igual a inf
+
+                            trips_vehicles[vehicle1][i] = new_trip_i
+                            trips_vehicles[vehicle2][j] = new_trip_j
+
+                            valid = check_capacity_vehicles(trips_vehicles, demands, max_capacity) # Es válido si los dos suman cero. Sino,
+                                    # se excedió la capacidad y es igual a inf
+
+
+                            if new_traveled_distance + valid >= distances_before: # Devolver los cambios
+                                #print('new_traveled_distance', new_traveled_distance)
+                                #print('distances_before', distances_before)
+                                trips_vehicles[vehicle1][i] = temp1
+                                trips_vehicles[vehicle2][j] = temp2
+                                improved = False
+                            else:
+                                if len(trips_vehicles[vehicle1][i]) <= 2:
+                                    print(trips_vehicles[vehicle1][i])
+                                    trips_vehicles[vehicle1].pop(i)
+                                    return trips_vehicles, traveled_distance_trips, True
+                                if len(trips_vehicles[vehicle2][j]) <= 2:
+                                    print(trips_vehicles[vehicle2][j])
+                                    trips_vehicles[vehicle2].pop(j)
+                                    return trips_vehicles, traveled_distance_trips, True
+
+                                traveled_distance_trips[vehicle1] = traveled_distance(trips_vehicles[vehicle1], dist_matrix)
+                                traveled_distance_trips[vehicle2] = traveled_distance(trips_vehicles[vehicle2], dist_matrix)
+                                # print(sum(traveled_distance_trips))
+
+                                better = True
+                                improved = True
+                                cont_improved += 1
+
+                            l += 1
+                        k += 1
+                    j += 1
+                i += 1
+    cont += 1
+
+    # if check_capacity_vehicles(trips_vehicles, demands, max_capacity) == float('inf'):
+    #     print(trips_vehicles)
+
+    return trips_vehicles, traveled_distance_trips, better
+
+
 
 # Define the insertion neighborhood structure
 def insertion(trips, traveled_distances, dist_matrix, **kwargs):
@@ -406,7 +523,7 @@ def brute_force_relocation(trips_vehicles, traveled_distances, dist_matrix, **kw
 
     demands = kwargs['demands']
     max_capacity = kwargs['max_capacity']
-    max_capacity = kwargs['max_capacity']
+    max_distance = kwargs['max_distance']
     num_vehicles = kwargs['num_vehicles']
 
     # for i in range(len(trips)):
@@ -445,9 +562,12 @@ def brute_force_relocation(trips_vehicles, traveled_distances, dist_matrix, **kw
                             valid = check_capacity_vehicles(trips_vehicles, demands, max_capacity) # Es válido si los dos suman cero. Sino,
                                         # se excedió la capacidad y es igual a inf
 
+                            traveled_distances_trips_vehicles = [traveled_distance(path, dist_matrix) for path in trips_vehicles]
+
                             # Acá debo multiplicar por una variable binaria de si se cumple la capacidad o no
-                            if traveled_distance(trips_vehicles[vehicle1], dist_matrix) + traveled_distance(trips_vehicles[vehicle2],
-                                    dist_matrix) + valid > traveled_distances[vehicle1] + traveled_distances[vehicle2]:
+                            # if traveled_distance(trips_vehicles[vehicle1], dist_matrix) + traveled_distance(trips_vehicles[vehicle2],
+                            #         dist_matrix) + valid > traveled_distances[vehicle1] + traveled_distances[vehicle2]:
+                            if not valid or distance_exceed(traveled_distances_trips_vehicles, max_distance, num_vehicles) > distance_exceed(traveled_distances, max_distance, num_vehicles):
                                 # Si es peor devuelve los cambios
                                 #print(valid)
                                 restored_customer = trips_vehicles[vehicle2][j].pop(l)

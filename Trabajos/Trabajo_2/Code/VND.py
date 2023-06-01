@@ -37,7 +37,7 @@ def __initial_solution(solution, dist_matrix, num_vehicles):
 
     return trips, traveled_distances
 
-def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_vehicles, num_insertions=1000, num_relocations=1000, preprocess=True, traveled_distances=None, ruido=False):
+def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, max_distance, num_vehicles, num_insertions=1000, num_relocations=1000, preprocess=True, traveled_distances=None, ruido=False):
 
     if preprocess:
         trips, traveled_distances = __initial_solution(solution_VND, dist_matrix, num_vehicles)
@@ -55,7 +55,7 @@ def VND(solution_VND, neighborhoods, dist_matrix, demands, max_capacity, num_veh
     while j < len(neighborhoods):
         new_trips, new_traveled_distances, better = neighborhoods[j](trips,
             traveled_distances, dist_matrix, demands = demands,
-            max_capacity=max_capacity, num_vehicles=num_vehicles, num_insertions=num_insertions, num_relocations=num_relocations, ruido=ruido)
+            max_capacity=max_capacity, max_distance=max_distance, num_vehicles=num_vehicles, num_insertions=num_insertions, num_relocations=num_relocations, ruido=ruido)
         if better:
             j = 0
             trips = new_trips

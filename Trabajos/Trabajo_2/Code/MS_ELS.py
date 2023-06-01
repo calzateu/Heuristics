@@ -15,7 +15,7 @@ def MS_ELS(utils, problem_information, dist_matrix, demands, max_capacity, max_d
         for vehicle in S:
             traveled_distances_S.append(traveled_distance(vehicle, dist_matrix))
 
-        S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, num_cars, num_insertions, num_relocations, preprocess=False, traveled_distances=traveled_distances_S, ruido=ruido)
+        S, traveled_distances_S = VND(S, neighborhoods, dist_matrix, demands, max_capacity, max_distance, num_cars, num_insertions, num_relocations, preprocess=False, traveled_distances=traveled_distances_S, ruido=ruido)
 
         #if sum(traveled_distances_S) < f_asteristo:
         if utils.distance_exceed(traveled_distances_S, max_distance, num_cars) < f_asteristo:

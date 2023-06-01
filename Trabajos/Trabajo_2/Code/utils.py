@@ -342,7 +342,7 @@ class Utils():
             max_distance = problem_information[3]
 
             start = time.time()
-            solution, traveled_distances = VND(solutions[file], neighborhoods, dist_matrix, demands, max_capacity=max_capacity, num_vehicles=num_vehicles)
+            solution, traveled_distances = VND(solutions[file], neighborhoods, dist_matrix, demands, max_capacity=max_capacity, max_distance=max_distance, num_vehicles=num_vehicles)
             end = time.time()
             total_time = end - start
 
