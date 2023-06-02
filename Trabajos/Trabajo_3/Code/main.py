@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 
     size_population = 20
-    num_generations = 20
+    num_generations = 40
     probability_mutation = 0.5
 
     name = "mtVRP_Cristian_Alzate_Urrea_sancocho"
